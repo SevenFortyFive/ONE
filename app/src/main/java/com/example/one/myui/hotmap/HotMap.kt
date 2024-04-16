@@ -1,27 +1,35 @@
 package com.example.one.myui.hotmap
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.one.data.hotmapdata.entity.MyHotMapData
 import com.example.one.helper.MyData
 import com.example.one.helper.getCaraWithLe
 import com.example.one.setting.HotMapSetting
 import com.example.one.ui.theme.ONETheme
+import com.example.one.vm.HotMapVM
+import kotlin.random.Random
 
 @Composable
-fun Hotmap()
+fun HotMap()
 {
-    val (CurrentYear,CurrentMonth) = MyData.getCurrentMonth()
+    val vm:HotMapVM = viewModel()
+    vm.getAllData_ThreeM()
 
     Row{
         for(i in 0..3)
         {
-            val numOfDay = MyData.getNumOfDay(CurrentYear,CurrentMonth-3+i)
+            val numOfDay = MyData.getNumOfDay(MyData.currentYear,MyData.currentMonth-3+i)
 
             val numOfColumn = (numOfDay / 7) + 1
 
@@ -33,13 +41,14 @@ fun Hotmap()
                 {
                     Column {
                         if(k==1)
-                            TextCell(string = getCaraWithLe(CurrentMonth-3+i))
+                            TextCell(string = getCaraWithLe(MyData.currentMonth-3+i))
                         else
                             EmptyCell()
                         Spacer(modifier = Modifier.height(HotMapSetting.CellPadding))
                         for(j in 1..7)
                         {
-                            Cell(value = 0, i==3 && currentDay == MyData.currentDay)
+                            Log.d("hotmap","ready to go to cell")
+                            Cell(value = Random.nextInt(10), i==3 && currentDay == MyData.currentDay)
                             if(currentDay++ == numOfDay)
                                 break;
                             if(j != 7)
@@ -59,6 +68,6 @@ fun Hotmap()
 fun TestHotMap()
 {
     ONETheme {
-        Hotmap()
+        HotMap()
     }
 }

@@ -1,5 +1,6 @@
 package com.example.one.myui.hotmap
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,6 +28,7 @@ import com.example.one.ui.theme.ONETheme
 @Composable
 fun Cell(value: Int,isToday:Boolean? = false,string: String?=null)
 {
+    Log.d("Cell", "get data$value")
     val color =  getColorForValue(value)
     val modifier = if(isToday == true)
     {
@@ -72,7 +74,7 @@ fun TextCell(string: String){
             modifier = Modifier.align(Alignment.Center)
                 .fillMaxSize(),
             textAlign = TextAlign.Center,
-            fontSize = 8.sp)
+            fontSize = HotMapSetting.MonthSize)
     }
 }
 

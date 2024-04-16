@@ -1,4 +1,4 @@
-package com.example.one.data
+package com.example.one.data.hotmapdata
 
 enum class HotMapClass{
     BREATH,

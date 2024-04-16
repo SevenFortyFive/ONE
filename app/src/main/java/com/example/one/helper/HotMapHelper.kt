@@ -25,6 +25,8 @@ fun getColorForValue(value: Int): Color {
 object MyData{
 
     val currentDay = LocalDate.now().dayOfMonth
+    val currentYear = LocalDate.now().year
+    val currentMonth = LocalDate.now().month.value
 
     /**
      * 返回当前是某年某月
