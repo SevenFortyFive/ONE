@@ -58,6 +58,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:1.6.4")
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.media3.exoplayer)
     val room_version = "2.6.1"
 
     implementation("androidx.room:room-runtime:$room_version")
