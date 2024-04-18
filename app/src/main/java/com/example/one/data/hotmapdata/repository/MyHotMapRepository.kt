@@ -1,11 +1,13 @@
 package com.example.one.data.hotmapdata.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.one.data.hotmapdata.db.MyHotMapDatabase
 import com.example.one.data.hotmapdata.entity.MyHotMapData
 
 class MyHotMapDataRepository(private val db:MyHotMapDatabase) {
     suspend fun add(myData: MyHotMapData):Long{
+        Log.d("database","is adding")
         return db.myHotMapDataDao().add(myData)
     }
     suspend fun getAllMyData():List<MyHotMapData>{

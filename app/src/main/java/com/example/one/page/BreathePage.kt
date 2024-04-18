@@ -8,8 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.one.myui.hotmap.HotMap
-import com.example.one.myui.player.Player
+import com.example.one.myui.HotMap
+import com.example.one.myui.Player
 import com.example.one.ui.theme.ONETheme
 
 @Composable

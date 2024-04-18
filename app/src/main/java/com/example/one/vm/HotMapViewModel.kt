@@ -54,11 +54,25 @@ class HotMapVM(val app: Application): AndroidViewModel(app){
 
     init {
         myHotMapDataRepository = MyHotMapDataRepository(db)
+        viewModelScope.launch {
+            val tem : MyHotMapData = MyHotMapData(1,1,1,1,1,1)
+            val n = myHotMapDataRepository.add(tem)
+            Log.d("HotMap",n.toString())
+        }
+        getAllData_ThreeM()
     }
 
     // 提取近三个月的数据
     fun getAllData_ThreeM(){
-        Log.d("hotmap","协程启动")
-        Log.d("hotmap","协程结束")
+        viewModelScope.launch {
+            _data_1.postValue(myHotMapDataRepository.getAllMyData())
+            if(_data_1.value != null)
+            {
+                Log.d("HotMap","_data_1 size is "+_data_1.value?.size)
+            }else
+            {
+                Log.d("HotMap","_data_1 is null")
+            }
+        }
     }
 }

@@ -6,6 +6,8 @@ plugins {
     id ("kotlin-kapt")
 }
 
+
+
 android {
     namespace = "com.example.one"
     compileSdk = 34
@@ -53,23 +55,23 @@ android {
 }
 
 dependencies {
-
-    implementation ("androidx.compose.material:material:1.6.4")
-    implementation("androidx.compose.runtime:runtime-livedata:1.6.4")
+    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation (libs.androidx.material)
+    implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.media3.exoplayer)
     val room_version = "2.6.1"
 
-    implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
 
     // To use Kotlin annotation processing tool (kapt)
     kapt("androidx.room:room-compiler:$room_version")
     // optional - Kotlin Extensions and Coroutines support for Room
-    implementation("androidx.room:room-ktx:$room_version")
+    implementation(libs.androidx.room.room.ktx3)
     // optional - Test helpers
-    testImplementation("androidx.room:room-testing:$room_version")
+    testImplementation(libs.androidx.room.room.testing3)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

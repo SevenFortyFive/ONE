@@ -3,7 +3,7 @@ package com.example.one.data.playerdata
 import com.example.one.R
 
 data class AudioData(
-    val rawid: String,
+    val uri:String,
     val name: String,
     val surface: Int
 )
@@ -13,8 +13,8 @@ data class AudioData(
  */
 fun getAudioList(): List<AudioData> {
     return listOf(
-        AudioData("res/raw/blackbird.mp3","",R.raw.img))
-//        AudioData(R.raw.citytraffic,"citytraffic",R.raw.img),
-//        AudioData(R.raw.rainy,"rainy",R.raw.img),
-//        AudioData(R.raw.wind,"wind",R.raw.img))
+        AudioData("asset:///blackbird.mp3","bird",R.raw.img),
+        AudioData("asset:///citytraffic.mp3","citytraffic",R.raw.img1),
+        AudioData("asset:///rainy.mp3","rainy",R.raw.img3),
+        AudioData("asset:///wind.mp3","wind",R.raw.img8))
 }
