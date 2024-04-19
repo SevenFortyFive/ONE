@@ -1,8 +1,11 @@
 package com.example.one.myui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,10 +17,13 @@ import com.example.one.ui.theme.ONETheme
 
 @Composable
 fun HelloBox(string: String? = null){
-    Column {
-        Text(text = "Hi!", fontSize = 25.sp)
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(text = string ?: (getTimeScr() + "好"), fontSize = 50.sp)
+    Box(modifier = Modifier.fillMaxWidth())
+    {
+        Column(modifier = Modifier.padding(10.dp)) {
+            Text(text = "Hi!", fontSize = 15.sp)
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(text = string ?: (getTimeScr() + "好"), fontSize = 25.sp)
+        }
     }
 }
 

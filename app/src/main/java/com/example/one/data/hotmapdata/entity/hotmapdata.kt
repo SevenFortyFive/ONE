@@ -9,11 +9,12 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = "myhotmapdata")
 data class MyHotMapData(
-        @PrimaryKey(autoGenerate = true)
-        val id: Int,
-        var year: Int,
-        var month: Int,
-        var day: Int,
-        var breath: Int,
-        var clock: Int,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long,
+    var year: Int,
+    var month: Int,
+    var day: Int,
+    var breath: Int,
+    var clock: Int,
+    var drink:Int
 )

@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -66,14 +67,10 @@ fun Player(){
     var ifshow by remember {
         mutableStateOf(true)
     }
-    // 创建动画状态
-    val sizeState by animateDpAsState(
-        if (ifshow) 300.dp else 100.dp, label = "SizeChange"
-    )
     Card(
         modifier = Modifier
-            .absoluteOffset(100.dp, 300.dp)
-            .size(sizeState)
+            .fillMaxWidth()
+            .height(400.dp)
             .animateContentSize()
             .padding(10.dp)
             .clickable { ifshow = !ifshow },

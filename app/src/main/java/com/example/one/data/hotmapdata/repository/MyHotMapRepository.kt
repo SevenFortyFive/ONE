@@ -7,7 +7,7 @@ import com.example.one.data.hotmapdata.entity.MyHotMapData
 
 class MyHotMapDataRepository(private val db:MyHotMapDatabase) {
     suspend fun add(myData: MyHotMapData):Long{
-        Log.d("database","is adding")
+        Log.d("hotmap","is adding")
         return db.myHotMapDataDao().add(myData)
     }
     suspend fun getAllMyData():List<MyHotMapData>{

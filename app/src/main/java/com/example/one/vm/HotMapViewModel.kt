@@ -7,12 +7,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
-import com.example.one.data.hotmapdata.HotMapClass
-import com.example.one.data.hotmapdata.HotMapState
 import com.example.one.data.hotmapdata.db.MyHotMapDatabase
-import com.example.one.data.hotmapdata.entity.MyHotMapData
 import com.example.one.data.hotmapdata.repository.MyHotMapDataRepository
-import com.example.one.helper.MyData
+import com.example.one.helper.getNewData
 import kotlinx.coroutines.launch
 
 class HotMapVM(val app: Application): AndroidViewModel(app){
@@ -25,54 +22,36 @@ class HotMapVM(val app: Application): AndroidViewModel(app){
         ).build()
     }
 
+    private var _info:MutableLiveData<String> = MutableLiveData("没有数据")
+
+    val info:LiveData<String>
+        get() = _info
+
     //初始化Repository
     private var myHotMapDataRepository: MyHotMapDataRepository
 
-    // 指定当前热图类型
-    private var _currentclass = MutableLiveData(HotMapClass.BREATH)
-    val currentclass :LiveData<HotMapClass>
-        get() = _currentclass
-
-    //供compose观察的UI状态
-    private val _currentState: MutableLiveData<HotMapState> = MutableLiveData()
-    val currentState: LiveData<HotMapState>
-        get() = _currentState
-
-    // 存储当前热图数据列表
-    private var _data_1 = MutableLiveData<List<MyHotMapData>>()
-    val data_1 : LiveData<List<MyHotMapData>>
-        get() = _data_1
-    private var _data_2 = MutableLiveData<List<MyHotMapData>>()
-    val data_2 : LiveData<List<MyHotMapData>>
-        get() = _data_2
-    private var _data_3 = MutableLiveData<List<MyHotMapData>>()
-    val data_3 : LiveData<List<MyHotMapData>>
-        get() = _data_3
-    private var _data_4 = MutableLiveData<List<MyHotMapData>>()
-    val data_4 : LiveData<List<MyHotMapData>>
-        get() = _data_4
-
     init {
         myHotMapDataRepository = MyHotMapDataRepository(db)
-        viewModelScope.launch {
-            val tem : MyHotMapData = MyHotMapData(1,1,1,1,1,1)
-            val n = myHotMapDataRepository.add(tem)
-            Log.d("HotMap",n.toString())
-        }
-        getAllData_ThreeM()
     }
 
     // 提取近三个月的数据
-    fun getAllData_ThreeM(){
+    fun getAllData(){
         viewModelScope.launch {
-            _data_1.postValue(myHotMapDataRepository.getAllMyData())
-            if(_data_1.value != null)
+            var datalist = myHotMapDataRepository.getAllMyData()
+            if(datalist.isNotEmpty())
             {
-                Log.d("HotMap","_data_1 size is "+_data_1.value?.size)
-            }else
-            {
-                Log.d("HotMap","_data_1 is null")
+                _info.value = datalist.toString()
+                Log.d("data",datalist.toString())
             }
+            else{
+                _info.value = "没有数据"
+            }
+        }
+    }
+
+    fun add() {
+        viewModelScope.launch {
+            myHotMapDataRepository.add(getNewData())
         }
     }
 }
