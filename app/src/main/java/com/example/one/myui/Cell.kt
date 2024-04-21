@@ -27,7 +27,6 @@ import com.example.one.ui.theme.ONETheme
 @Composable
 fun Cell(value: Int,isToday:Boolean? = false,string: String?=null)
 {
-    Log.d("Cell", "get data$value")
     val color =  getColorForValue(value)
     val modifier = if(isToday == true)
     {
@@ -74,21 +73,5 @@ fun TextCell(string: String){
                 .fillMaxSize(),
             textAlign = TextAlign.Center,
             fontSize = HotMapSetting.MonthSize)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun TestCell(){
-    ONETheme {
-        Column {
-            Cell(1)
-            Spacer(modifier = Modifier.height(HotMapSetting.CellPadding))
-            Cell(10)
-            Spacer(modifier = Modifier.height(HotMapSetting.CellPadding))
-            Cell(0)
-            Spacer(modifier = Modifier.height(HotMapSetting.CellPadding))
-            TextCell("1")
-        }
     }
 }

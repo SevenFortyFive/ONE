@@ -5,10 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,12 +31,11 @@ fun TestUI(){
         Column(verticalArrangement = Arrangement.Center) {
             Spacer(modifier = Modifier.height(10.dp))
             Button(onClick = {
-                vm.add()
             }) {
                 Text(text = "添加数据")
             }
             Spacer(modifier = Modifier.height(10.dp))
-            Button(onClick = { vm.getAllData()}) {
+            Button(onClick = { }) {
                 Text(text = "获取数据")
             }
             Spacer(modifier = Modifier.height(10.dp))

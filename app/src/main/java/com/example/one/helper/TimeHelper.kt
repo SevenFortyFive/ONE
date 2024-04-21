@@ -18,43 +18,44 @@ fun getTimeScr():String{
         "晚上"
 }
 
+/**
+ * 获取当前是当前月份的哪一天
+ */
+fun getCurrentDay():Int{
+    return LocalDate.now().dayOfMonth
+}
 
-object MyData{
 
-    val currentDay = LocalDate.now().dayOfMonth
-    val currentYear = LocalDate.now().year
-    val currentMonth = LocalDate.now().month.value
+/**
+ * 返回当前是某年某月
+ */
+fun getCurrentMonth(): Pair<Int,Int>{
+    val currentData = LocalDate.now()
+    return Pair(currentData.year,currentData.monthValue)
+}
 
-    /**
-     * 返回当前是某年某月
-     */
-    fun getCurrentMonth(): Pair<Int,Int>{
-        val currentData = LocalDate.now()
-        return Pair(currentData.year,currentData.monthValue)
-    }
-
-    /**
-     * 检查输入日期是否存在
-     */
-    fun isData(year:Int,month:Int,day:Int):Boolean
+/**
+ * 检查输入日期是否存在
+ */
+fun isData(year:Int,month:Int,day:Int):Boolean
+{
+    return try {
+        LocalDate.of(year,month,day)
+        true
+    }catch(e: DateTimeException)
     {
-        return try {
-            LocalDate.of(year,month,day)
-            true
-        }catch(e: DateTimeException)
-        {
-            false
-        }
-    }
-
-    /**
-     * 获取当前年月共有几天
-     */
-    fun getNumOfDay(year:Int,month:Int):Int{
-        val yearmonth = YearMonth.of(year,month)
-        return yearmonth.lengthOfMonth()
+        false
     }
 }
+
+/**
+ * 获取当前年月共有几天
+ */
+fun getNumOfDay(year:Int,month:Int):Int{
+    val yearmonth = YearMonth.of(year,month)
+    return yearmonth.lengthOfMonth()
+}
+
 
 fun getCaraWithLe(letter: Int):String{
     return when(letter)

@@ -7,9 +7,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
+import com.example.one.data.hotmapdata.HotMapState
 import com.example.one.data.hotmapdata.db.MyHotMapDatabase
+import com.example.one.data.hotmapdata.entity.MyHotMapData
 import com.example.one.data.hotmapdata.repository.MyHotMapDataRepository
-import com.example.one.helper.getNewData
+import com.example.one.helper.getCurrentMonth
+import com.example.one.helper.getNewHotMapData
+import com.example.one.helper.getNumOfDay
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 class HotMapVM(val app: Application): AndroidViewModel(app){
@@ -23,9 +29,17 @@ class HotMapVM(val app: Application): AndroidViewModel(app){
     }
 
     private var _info:MutableLiveData<String> = MutableLiveData("没有数据")
-
     val info:LiveData<String>
         get() = _info
+
+    // 存储加载到内存中的热图数据
+    private var _data:MutableLiveData<Array<Array<MyHotMapData>>> = MutableLiveData()
+    val data :LiveData<Array<Array<MyHotMapData>>>
+        get() = _data
+
+    private var _HotMapState:MutableLiveData<HotMapState> = MutableLiveData(com.example.one.data.hotmapdata.HotMapState.LOADING)
+    val HotMapState:LiveData<HotMapState>
+        get() = _HotMapState
 
     //初始化Repository
     private var myHotMapDataRepository: MyHotMapDataRepository
@@ -34,24 +48,47 @@ class HotMapVM(val app: Application): AndroidViewModel(app){
         myHotMapDataRepository = MyHotMapDataRepository(db)
     }
 
-    // 提取近三个月的数据
-    fun getAllData(){
+    /**
+     * 对数据进行初始化
+     */
+    fun initdata() {
         viewModelScope.launch {
-            var datalist = myHotMapDataRepository.getAllMyData()
-            if(datalist.isNotEmpty())
-            {
-                _info.value = datalist.toString()
-                Log.d("data",datalist.toString())
+            _HotMapState.value = com.example.one.data.hotmapdata.HotMapState.LOADING
+            val (y, m) = getCurrentMonth()
+            val newarray = Array(5) { Array(32) { getNewHotMapData() } }
+
+            val deferreds = (0..3).map { i ->
+                async {
+                    val numberOfDay = getNumOfDay(y, m + i - 3)
+                    for (j in 1..numberOfDay) {
+                        val QData = myHotMapDataRepository.findByDataWithDay(y, m, j)
+                        if (QData == null) {
+                            myHotMapDataRepository.add(getNewHotMapData())
+                        } else {
+                            newarray[i][j] = QData
+                        }
+                    }
+                }
             }
-            else{
-                _info.value = "没有数据"
-            }
+
+            // 等待所有协程执行完毕
+            deferreds.awaitAll()
+
+            // 所有协程执行完毕后，将新数组赋值给 _data
+            _data.value = newarray
+
+            // 数据加载完成，将状态设置为 READY
+            _HotMapState.value = com.example.one.data.hotmapdata.HotMapState.READY
         }
     }
-
-    fun add() {
+    fun update(){
+        initdata()
+    }
+    fun getAll()
+    {
         viewModelScope.launch {
-            myHotMapDataRepository.add(getNewData())
+            val list = myHotMapDataRepository.getAllMyData()
+            Log.d("getall",list.toString())
         }
     }
 }

@@ -24,4 +24,7 @@ class MyHotMapDataRepository(private val db:MyHotMapDatabase) {
     suspend fun findByData(year:Int, month: Int): List<MyHotMapData> {
         return db.myHotMapDataDao().findByData(year, month)
     }
+    suspend fun findByDataWithDay(year: Int,month: Int,day:Int):MyHotMapData?{
+        return db.myHotMapDataDao().findByDataWithDay(year, month, day)
+    }
 }
