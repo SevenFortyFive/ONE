@@ -7,24 +7,20 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -59,70 +55,65 @@ fun Player(){
 
     val vm:PlayerViewModel = viewModel(LocalContext.current as ComponentActivity)
 
-    val playerstate = vm.currentState.observeAsState()
-    val currentdata = vm.currentAudioData.observeAsState()
-    val prename = vm.preName.observeAsState()
-    val nextname = vm.nextName.observeAsState()
+    val playerState = vm.currentState.observeAsState()
+    val currentData = vm.currentAudioData.observeAsState()
+    val preName = vm.preName.observeAsState()
+    val nextName = vm.nextName.observeAsState()
 
-    var ifshow by remember {
-        mutableStateOf(true)
-    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(400.dp)
             .animateContentSize()
-            .padding(10.dp)
-            .clickable { ifshow = !ifshow },
+            .padding(10.dp),
         elevation = 8.dp,
         shape = RoundedCornerShape(10.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center)
         {
-            if(ifshow)
-            {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    CD(isPlaying = (playerstate.value == PlayerState.PLAYING),
-                        imgID = (currentdata.value as AudioData).surface,
-                        modifier = Modifier)
 
-                    Spacer(modifier = Modifier.height(2.dp))
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CD(isPlaying = (playerState.value == PlayerState.PLAYING),
+                    imgID = (currentData.value as AudioData).surface,
+                    modifier = Modifier)
 
-                    Row {
-                        Text(text = "上一首:"+prename.value as String)
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Text(text = (currentdata.value as AudioData).name)
-                        Text(text = "下一首:"+nextname.value as String)
+                Spacer(modifier = Modifier.height(2.dp))
+
+                Row {
+                    Text(text = "上一首:"+preName.value as String)
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Text(text = (currentData.value as AudioData).name)
+                    Text(text = "下一首:"+nextName.value as String)
+                }
+
+
+                Spacer(modifier = Modifier.height(2.dp))
+
+                Row {
+                    Button(onClick = {vm.preAudio()}) {
+                        Text(text = "上一首")
                     }
-
-
-                    Spacer(modifier = Modifier.height(2.dp))
-
-                    Row {
-                        Button(onClick = {vm.preAudio()}) {
-                            Text(text = "上一首")
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Button(onClick = {
+                        if(playerState.value == PlayerState.STOP)
+                        {
+                            vm.start()
+                        }else{
+                            vm.pause()
                         }
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Button(onClick = {
-                            if(playerstate.value == PlayerState.STOP)
-                            {
-                                vm.start()
-                            }else{
-                                vm.pause()
-                            }
-                        }) {
-                            Text(text = if(playerstate.value == PlayerState.PLAYING)"暂停" else "开始")
-                        }
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Button(onClick = {vm.nextAudio()}) {
-                            Text(text = "下一首")
-                        }
+                    }) {
+                        Text(text = if(playerState.value == PlayerState.PLAYING)"暂停" else "开始")
+                    }
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Button(onClick = {vm.nextAudio()}) {
+                        Text(text = "下一首")
                     }
                 }
+
             }
         }
     }

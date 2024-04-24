@@ -13,7 +13,6 @@ sealed class BottomMenuScreen (
     val title: String
 ){
     data object MainPage : BottomMenuScreen("MainPage", Icons.Default.Home,"主页")
-    data object HotMapPage : BottomMenuScreen("BreathePage", Icons.Default.Check,"breathe")
-    data object Analyse : BottomMenuScreen("ClockPage", Icons.Default.DateRange,"clock")
-    data object Others : BottomMenuScreen("OthersPage", Icons.Default.Menu,"others")
+    data object Analyse : BottomMenuScreen("TodoPage", Icons.Default.DateRange,"代办")
+    data object Others : BottomMenuScreen("OthersPage", Icons.Default.Menu,"用户")
 }

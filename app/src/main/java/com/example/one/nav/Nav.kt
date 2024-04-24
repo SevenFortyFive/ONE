@@ -11,13 +11,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.one.data.navdata.BottomMenuScreen
-import com.example.one.page.BreathePage
 import com.example.one.page.MainPage
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import com.example.one.page.ClockPage
+import com.example.one.page.OthersPage
+import com.example.one.page.TodoPage
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -39,17 +39,13 @@ fun Navigation(navController: NavHostController)
         composable("MainPage"){
             MainPage()
         }
-        composable("BreathePage")
+        composable("TodoPage")
         {
-            BreathePage()
-        }
-        composable("ClockPage")
-        {
-            ClockPage()
+            TodoPage()
         }
         composable("OthersPage")
         {
-
+            OthersPage()
         }
     }
 }
@@ -58,7 +54,6 @@ fun Navigation(navController: NavHostController)
 fun BottomMenu(navController: NavController) {
     val menuItems = listOf<BottomMenuScreen>(
         BottomMenuScreen.MainPage,
-        BottomMenuScreen.HotMapPage,
         BottomMenuScreen.Analyse,
         BottomMenuScreen.Others
     )
@@ -67,7 +62,7 @@ fun BottomMenu(navController: NavController) {
         val currentRoute = navBackStackEntry?.destination?.route
         menuItems.forEach {
             BottomNavigationItem(
-                label = { Text(text = it.route) },
+                label = { Text(text = it.title) },
                 alwaysShowLabel = true,
                 selectedContentColor = Color.White,
                 unselectedContentColor = Color.Gray,

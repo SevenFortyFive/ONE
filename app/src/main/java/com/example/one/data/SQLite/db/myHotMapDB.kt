@@ -1,9 +1,9 @@
-package com.example.one.data.hotmapdata.db
+package com.example.one.data.SQLite.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.one.data.hotmapdata.dao.MyHotMapDao
-import com.example.one.data.hotmapdata.entity.MyHotMapData
+import com.example.one.data.SQLite.dao.MyHotMapDao
+import com.example.one.data.SQLite.entity.MyHotMapData
 
 @Database(
     entities = [MyHotMapData::class],  //表明本数据库中有几张表
@@ -12,5 +12,5 @@ import com.example.one.data.hotmapdata.entity.MyHotMapData
 )
 abstract class MyHotMapDatabase: RoomDatabase() {
     //引用存取特定表的数据存取对象
-    abstract fun myHotMapDataDao():MyHotMapDao
+    abstract fun myHotMapDataDao(): MyHotMapDao
 }

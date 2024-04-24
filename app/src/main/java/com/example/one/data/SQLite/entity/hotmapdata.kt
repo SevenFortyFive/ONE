@@ -1,4 +1,4 @@
-package com.example.one.data.hotmapdata.entity
+package com.example.one.data.SQLite.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

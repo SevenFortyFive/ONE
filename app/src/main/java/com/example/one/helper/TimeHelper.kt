@@ -5,6 +5,9 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.YearMonth
 
+/**
+ * 获取当前时间描述
+ */
 fun getTimeScr():String{
     val hour = LocalTime.now().hour
 
@@ -18,6 +21,10 @@ fun getTimeScr():String{
         "晚上"
 }
 
+val CurrentIntYear:Int = getCurrentYear()
+val CurrentIntMonth:Int = getCurrentMonth()
+val CurrentIntDay:Int = getCurrentDay()
+
 /**
  * 获取当前是当前月份的哪一天
  */
@@ -25,13 +32,26 @@ fun getCurrentDay():Int{
     return LocalDate.now().dayOfMonth
 }
 
-
 /**
  * 返回当前是某年某月
  */
-fun getCurrentMonth(): Pair<Int,Int>{
+fun getCurrentMonthAndYear(): Pair<Int,Int>{
     val currentData = LocalDate.now()
     return Pair(currentData.year,currentData.monthValue)
+}
+
+/**
+ * 返回当前年份
+ */
+fun getCurrentYear():Int{
+    return LocalDate.now().year
+}
+
+/**
+ * 返回当前月份
+ */
+fun getCurrentMonth():Int{
+    return LocalDate.now().monthValue
 }
 
 /**
@@ -52,8 +72,8 @@ fun isData(year:Int,month:Int,day:Int):Boolean
  * 获取当前年月共有几天
  */
 fun getNumOfDay(year:Int,month:Int):Int{
-    val yearmonth = YearMonth.of(year,month)
-    return yearmonth.lengthOfMonth()
+    val yearMonth = YearMonth.of(year,month)
+    return yearMonth.lengthOfMonth()
 }
 
 

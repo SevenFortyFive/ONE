@@ -1,7 +1,7 @@
 package com.example.one.helper
 
 import androidx.compose.ui.graphics.Color
-import com.example.one.data.hotmapdata.entity.MyHotMapData
+import com.example.one.data.SQLite.entity.MyHotMapData
 import com.example.one.ui.theme.Gray
 import com.example.one.ui.theme.Green1
 import com.example.one.ui.theme.Green2
@@ -27,7 +27,7 @@ fun getColorForValue(value: Int): Color {
 /**
  * 用于新建当前日期的hotmapdata
  */
-fun getNewHotMapData():MyHotMapData{
-    return MyHotMapData(0, getCurrentMonth().first, getCurrentMonth().second, getCurrentDay(),
-        Random.nextInt(10),0,0)
+fun getNewHotMapData(year:Int,month:Int,day:Int): MyHotMapData {
+    return MyHotMapData(0, year,month,day,
+        0,0,0)
 }

@@ -1,11 +1,11 @@
-package com.example.one.data.hotmapdata.dao
+package com.example.one.data.SQLite.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.one.data.hotmapdata.entity.MyHotMapData
+import com.example.one.data.SQLite.entity.MyHotMapData
 
 @Dao
 interface MyHotMapDao{
@@ -21,9 +21,9 @@ interface MyHotMapDao{
     @Query("select * from myhotmapdata")
     suspend fun getAll(): List<MyHotMapData>
 
-    @Query("select * from myhotmapdata where year=:year & month =:month")
-    suspend fun findByData(year:Int,month:Int): List<MyHotMapData>
+    @Query("select * from myhotmapdata where year=:year and month =:month and day=:day")
+    suspend fun findByDataWithDay(year: Int, month: Int,day:Int): MyHotMapData?
 
-    @Query("select * from myhotmapdata where year=:year & month =:month & day=:day")
-    suspend fun findByDataWithDay(year: Int, month: Int,day:Int):MyHotMapData?
+    @Query("select * from myhotmapdata where id =:id")
+    suspend fun findById(id:Long): MyHotMapData?
 }
