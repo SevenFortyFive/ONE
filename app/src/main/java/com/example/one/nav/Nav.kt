@@ -10,7 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.one.data.navdata.BottomMenuScreen
+import com.example.one.data.NavData.BottomMenuScreen
 import com.example.one.page.MainPage
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -68,9 +68,17 @@ fun BottomMenu(navController: NavController) {
                 unselectedContentColor = Color.Gray,
                 selected = currentRoute == it.route,
                 onClick = {
-                    navController.navigate(it.route)
+                    if(currentRoute != it.route)
+                    {
+                        navController.navigate(it.route)
+                    }else{
+                    }
                 },
-                icon = { Icon(imageVector = it.icon, contentDescription = it.title) }
+                icon = {
+                    Icon(imageVector = it.icon,
+                        contentDescription = it.title
+                    )
+                }
             )
         }
     }

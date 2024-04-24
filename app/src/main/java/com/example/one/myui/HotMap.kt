@@ -1,6 +1,7 @@
 package com.example.one.myui
 
 import android.app.Application
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,7 +38,8 @@ import com.example.one.vm.MyHotMapViewModelFactory
 @Composable
 fun HotMap()
 {
-    val vm:HotMapViewModel = viewModel(factory = MyHotMapViewModelFactory(LocalContext.current.applicationContext as Application))
+    val vm:HotMapViewModel = viewModel(LocalContext.current as ComponentActivity
+        ,factory = MyHotMapViewModelFactory(LocalContext.current.applicationContext as Application))
 
     val data by vm.data.observeAsState()
 

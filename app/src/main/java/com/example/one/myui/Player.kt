@@ -1,6 +1,6 @@
 package com.example.one.myui
 
-import PlayerViewModel
+import com.example.one.vm.PlayerViewModel
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.animateContentSize
@@ -47,13 +47,13 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.one.R
-import com.example.one.data.playerdata.AudioData
-import com.example.one.data.playerdata.PlayerState
+import com.example.one.data.PlayerData.AudioData
+import com.example.one.data.PlayerData.PlayerState
 
 @Composable
 fun Player(){
 
-    val vm:PlayerViewModel = viewModel(LocalContext.current as ComponentActivity)
+    val vm: PlayerViewModel = viewModel(LocalContext.current as ComponentActivity)
 
     val playerState = vm.currentState.observeAsState()
     val currentData = vm.currentAudioData.observeAsState()

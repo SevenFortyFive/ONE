@@ -1,5 +1,6 @@
 package com.example.one.vm
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -49,5 +50,9 @@ class TimerViewModel : ViewModel() {
         timeLeft = value.toLong()
         // After user clicks EditText, CompletedStatus turns to NotStartedStatus.
         if (status is CompletedStatus) status = NotStartedStatus(this)
+    }
+
+    init {
+        Log.d("TimerViewModel","init")
     }
 }

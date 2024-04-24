@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 
-object MySharedPerference{
+object MySharedPreference{
     private lateinit var SharedPreferences: SharedPreferences
 
     private lateinit var editor: SharedPreferences.Editor
@@ -14,6 +14,7 @@ object MySharedPerference{
         SharedPreferences = context.getSharedPreferences(SAVEDDATA,MODE_PRIVATE)
         editor = SharedPreferences.edit()
     }
+
 
     fun getInt(key:String):Int
     {

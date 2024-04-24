@@ -1,3 +1,5 @@
+package com.example.one.vm
+
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -6,9 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
-import com.example.one.data.playerdata.AudioData
-import com.example.one.data.playerdata.PlayerState
-import com.example.one.data.playerdata.getAudioList
+import com.example.one.data.PlayerData.AudioData
+import com.example.one.data.PlayerData.PlayerState
+import com.example.one.data.PlayerData.getAudioList
 import com.example.one.player.ExoPlayerManager
 import kotlinx.coroutines.launch
 
@@ -38,6 +40,7 @@ class PlayerViewModel(): ViewModel() {
         get() = _nextName
 
     init {
+        Log.d("com.example.one.vm.PlayerViewModel","Init")
         _currentState.postValue(PlayerState.LOADING)
         viewModelScope.launch {
             datalist.forEach {

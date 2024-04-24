@@ -42,7 +42,7 @@ class HotMapViewModel(private val app:Application):AndroidViewModel(app) {
         get() = _data
 
     init {
-        Log.d("init","hotmapviewmodel init")
+        Log.d("HotMapViewModel","init")
         viewModelScope.launch {
             val (y, m) = getCurrentMonthAndYear()
             val newArray = Array(5) { Array(32){ getNewHotMapData(0,0,0)} }

@@ -1,5 +1,6 @@
 package com.example.one.myui
 
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,10 +28,10 @@ import com.example.one.vm.SPViewModel
 
 @Composable
 fun SumTime(){
-    val vm:SPViewModel = viewModel()
-    val breath_time by vm._breath_time.observeAsState()
-    val clock_time by vm._clock_time.observeAsState()
-    val drink_time by vm._drink_time.observeAsState()
+    val vm:SPViewModel = viewModel(LocalContext.current as ComponentActivity)
+    val breathTime by vm.breathTime.observeAsState()
+    val clockTime by vm.clockTime.observeAsState()
+    val drinkTime by vm.drinkTime.observeAsState()
 
     Card(
         modifier = Modifier
@@ -41,11 +43,11 @@ fun SumTime(){
             Text(text = "今日")
             Spacer(modifier = Modifier.height(10.dp))
             Row {
-                SmallSumTime("drink",breath_time)
+                SmallSumTime("drink",breathTime)
                 Spacer(modifier = Modifier.width(20.dp))
-                SmallSumTime("clock",clock_time)
+                SmallSumTime("clock",clockTime)
                 Spacer(modifier = Modifier.width(20.dp))
-                SmallSumTime("drink",drink_time)
+                SmallSumTime("drink",drinkTime)
             }
         }
     }

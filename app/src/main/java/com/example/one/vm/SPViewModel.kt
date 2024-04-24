@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.one.data.SharedPreferences.BREATH_TIME_KEY
 import com.example.one.data.SharedPreferences.CLOCK_TIME_KEY
 import com.example.one.data.SharedPreferences.DRINK_TIME_KEY
-import com.example.one.data.SharedPreferences.MySharedPerference
+import com.example.one.data.SharedPreferences.MySharedPreference
 import kotlinx.coroutines.launch
 
 class SPViewModel:ViewModel() {
@@ -15,23 +15,23 @@ class SPViewModel:ViewModel() {
     val info: LiveData<String>
         get() = _info
 
-    val _breath_time:MutableLiveData<Int> = MutableLiveData(-1)
-    val breath_time:LiveData<Int>
-        get() = _breath_time
+    private val _breathTime:MutableLiveData<Int> = MutableLiveData(-1)
+    val breathTime:LiveData<Int>
+        get() = _breathTime
 
-    val _clock_time:MutableLiveData<Int> = MutableLiveData(-1)
-    val clock_time:LiveData<Int>
-        get() = _clock_time
+    private val _clockTime:MutableLiveData<Int> = MutableLiveData(-1)
+    val clockTime:LiveData<Int>
+        get() = _clockTime
 
-    val _drink_time:MutableLiveData<Int> = MutableLiveData(-1)
-    val drink_time:LiveData<Int>
-        get() = _drink_time
+    private val _drinkTime:MutableLiveData<Int> = MutableLiveData(-1)
+    val drinkTime:LiveData<Int>
+        get() = _drinkTime
 
     init {
         viewModelScope.launch {
-            _breath_time.value = MySharedPerference.getInt(BREATH_TIME_KEY)
-            _clock_time.value = MySharedPerference.getInt(CLOCK_TIME_KEY)
-            _drink_time.value = MySharedPerference.getInt(DRINK_TIME_KEY)
+            _breathTime.value = MySharedPreference.getInt(BREATH_TIME_KEY)
+            _clockTime.value = MySharedPreference.getInt(CLOCK_TIME_KEY)
+            _drinkTime.value = MySharedPreference.getInt(DRINK_TIME_KEY)
         }
     }
 }
