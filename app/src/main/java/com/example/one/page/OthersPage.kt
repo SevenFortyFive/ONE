@@ -19,8 +19,6 @@ import com.example.one.ui.theme.ONETheme
 fun OthersPage()
 {
     Column {
-        Text(text = "OtherPage")
-        Spacer(modifier = Modifier.padding(10.dp))
         SumTime()
         Spacer(modifier = Modifier.height(10.dp))
         Store()

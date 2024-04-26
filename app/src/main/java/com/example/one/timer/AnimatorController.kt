@@ -4,63 +4,94 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.view.animation.LinearInterpolator
+import com.example.one.data.SharedPreferences.BREATH_TIME_KEY
+import com.example.one.data.SharedPreferences.SharedPreferencesHelper
 import com.example.one.timer.TimerStatus.PausedStatus
 import com.example.one.timer.TimerStatus.StartedStatus
 import com.example.one.timer.TimerStatus.NotStartedStatus
 import com.example.one.timer.TimerStatus.CompletedStatus
+import com.example.one.vm.HotMapViewModel
 import com.example.one.vm.TimerViewModel
 import kotlin.math.ceil
 
 const val SPEED = 100
 
-class AnimatorController(private val viewModel: TimerViewModel) {
+object AnimatorController{
+    private var timerViewModel:TimerViewModel? = null
+    private var hotMapViewModel:HotMapViewModel? = null
+
+    fun init(timerViewModel: TimerViewModel,hotMapViewModel: HotMapViewModel){
+        this.timerViewModel = timerViewModel
+        this.hotMapViewModel = hotMapViewModel
+
+    }
 
     private var valueAnimator: ValueAnimator? = null
-
+    // 记录这次的value
+    private var thistimevalue = -1
     fun start() {
-        if (viewModel.totalTime == 0L) return
-        if (valueAnimator == null) {
-            // Animator: totalTime -> 0
-            valueAnimator = ValueAnimator.ofInt(viewModel.totalTime.toInt() * SPEED, 0)
-            valueAnimator?.interpolator = LinearInterpolator()
-            // Update timeLeft in ViewModel
-            valueAnimator?.addUpdateListener {
-                viewModel.animValue = (it.animatedValue as Int) / SPEED.toFloat()
-                viewModel.timeLeft = ceil(it.animatedValue as Int / SPEED.toFloat()).toLong()
-            }
-            valueAnimator?.addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    super.onAnimationEnd(animation)
-                    complete()
+        if(timerViewModel != null)
+        {
+            if (timerViewModel!!.totalTime == 0L) return
+            if (valueAnimator == null) {
+                // Animator: totalTime -> 0
+                valueAnimator = ValueAnimator.ofInt(timerViewModel!!.totalTime.toInt() * SPEED, 0)
+                valueAnimator?.interpolator = LinearInterpolator()
+                this.thistimevalue = timerViewModel!!.totalTime.toInt()
+                // Update timeLeft in ViewModel
+                valueAnimator?.addUpdateListener {
+                    timerViewModel!!.animValue = (it.animatedValue as Int) / SPEED.toFloat()
+                    timerViewModel!!.timeLeft = ceil(it.animatedValue as Int / SPEED.toFloat()).toLong()
                 }
-            })
-        } else {
-            valueAnimator?.setIntValues(viewModel.totalTime.toInt() * SPEED, 0)
+                valueAnimator?.addListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        super.onAnimationEnd(animation)
+                        complete()
+                    }
+                })
+            } else {
+                valueAnimator?.setIntValues(timerViewModel!!.totalTime.toInt() * SPEED, 0)
+            }
+            // (LinearInterpolator + duration) aim to set the interval as 1 second.
+            valueAnimator?.duration = timerViewModel!!.totalTime * 1000L
+            valueAnimator?.start()
+            timerViewModel!!.status = StartedStatus(timerViewModel!!)
         }
-        // (LinearInterpolator + duration) aim to set the interval as 1 second.
-        valueAnimator?.duration = viewModel.totalTime * 1000L
-        valueAnimator?.start()
-        viewModel.status = StartedStatus(viewModel)
+
     }
 
     fun pause() {
-        valueAnimator?.pause()
-        viewModel.status = PausedStatus(viewModel)
+        if(timerViewModel != null)
+        {
+            valueAnimator?.pause()
+            timerViewModel!!.status = PausedStatus(timerViewModel!!)
+        }
     }
 
     fun resume() {
-        valueAnimator?.resume()
-        viewModel.status = StartedStatus(viewModel)
+        if(timerViewModel != null)
+        {
+            valueAnimator?.resume()
+            timerViewModel!!.status = StartedStatus(timerViewModel!!)
+        }
     }
 
     fun stop() {
-        valueAnimator?.cancel()
-        viewModel.timeLeft = 0
-        viewModel.status = NotStartedStatus(viewModel)
+        if(timerViewModel != null)
+        {
+            valueAnimator?.cancel()
+            timerViewModel!!.timeLeft = 0
+            timerViewModel!!.status = NotStartedStatus(timerViewModel!!)
+        }
     }
 
     fun complete() {
-        viewModel.totalTime = 0
-        viewModel.status = CompletedStatus(viewModel)
+        if(timerViewModel != null)
+        {
+            timerViewModel!!.totalTime = 0
+            timerViewModel!!.status = CompletedStatus(timerViewModel!!)
+            hotMapViewModel!!.update(1)
+            SharedPreferencesHelper.add(BREATH_TIME_KEY, this.thistimevalue)
+        }
     }
 }

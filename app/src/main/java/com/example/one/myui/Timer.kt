@@ -1,7 +1,6 @@
 package com.example.one.myui
 
 import android.annotation.SuppressLint
-import androidx.activity.ComponentActivity
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
@@ -14,17 +13,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -32,22 +29,17 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.one.R
 import com.example.one.helper.TimeFormatUtils
+import com.example.one.page.MainPageState
 import com.example.one.vm.TimerViewModel
 import kotlin.math.cos
 import kotlin.math.sin
 
-// Start building your app here!
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MyTimer() {
-    val viewModel: TimerViewModel = viewModel(LocalContext.current as ComponentActivity)
+fun MyTimer(viewModel: TimerViewModel, mainPageState: MutableState<MainPageState>) {
 
     Card (
         modifier = Modifier
@@ -131,7 +123,7 @@ private fun StopButton(viewModel: TimerViewModel) {
 
 @Composable
 fun ProgressCircle(viewModel: TimerViewModel) {
-    // Circle diameter
+
     val size = 160.dp
     Box(contentAlignment = Alignment.Center) {
         Canvas(

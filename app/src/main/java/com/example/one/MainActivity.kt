@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.one.data.SharedPreferences.MySharedPreference
 import com.example.one.nav.MainScreen
 import com.example.one.player.ExoPlayerManager
+import com.example.one.timer.AnimatorController
 import com.example.one.ui.theme.ONETheme
 import com.example.one.vm.HotMapViewModel
 import com.example.one.vm.MyHotMapViewModelFactory
@@ -33,6 +34,7 @@ class MainActivity : ComponentActivity() {
 
         ExoPlayerManager.initializeExoPlayer(this)
         MySharedPreference.initSharedPreferences(this)
+        AnimatorController.init(timerViewModel,hotMapViewModel)
 
         setContent {
             ONETheme {
