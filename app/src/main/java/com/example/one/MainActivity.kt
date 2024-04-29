@@ -10,11 +10,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
 import com.example.one.data.SharedPreferences.MySharedPreference
 import com.example.one.nav.MainScreen
 import com.example.one.player.ExoPlayerManager
+import com.example.one.helper.LocalDpHelper
+import com.example.one.player.AudioController
 import com.example.one.timer.AnimatorController
 import com.example.one.ui.theme.ONETheme
 import com.example.one.vm.HotMapViewModel
@@ -32,9 +33,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        LocalDpHelper.init(this)
         ExoPlayerManager.initializeExoPlayer(this)
         MySharedPreference.initSharedPreferences(this)
         AnimatorController.init(timerViewModel,hotMapViewModel)
+        AudioController.init(playerViewModel)
 
         setContent {
             ONETheme {
@@ -53,6 +56,7 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
         timerViewModel.animatorController.stop()
         ExoPlayerManager.releasePlayer()
+        AudioController.release()
     }
 }
 

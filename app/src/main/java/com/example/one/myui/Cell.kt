@@ -25,7 +25,7 @@ import com.example.one.setting.HotMapSetting
 import com.example.one.ui.theme.ONETheme
 
 @Composable
-fun Cell(value: Int,isToday:Boolean? = false,string: String?=null)
+fun CellInCharRiver(value: Int, isToday:Boolean? = false, string: String?=null)
 {
     val color =  getColorForValue(value)
     val modifier = if(isToday == true)

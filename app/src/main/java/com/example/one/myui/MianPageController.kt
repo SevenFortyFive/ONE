@@ -21,11 +21,10 @@ import com.example.one.page.MainPageState
 import com.example.one.ui.theme.ONETheme
 
 @Composable
-fun MainPageController(mainPageState: MutableState<MainPageState>){
-    Card(
-        Modifier
+fun MainPageController(mainPageState: MutableState<MainPageState>,modifier: Modifier){
+    Card(modifier =
+        modifier
             .fillMaxWidth()
-            .height(100.dp)
             .animateContentSize()
             .padding(10.dp),
         elevation = 8.dp,

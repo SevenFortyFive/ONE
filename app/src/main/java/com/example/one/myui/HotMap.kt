@@ -30,14 +30,13 @@ import com.example.one.vm.HotMapViewModel
 
 
 @Composable
-fun HotMap(vm: HotMapViewModel, mainPageState:MutableState<MainPageState>)
+fun HotMap(vm: HotMapViewModel, mainPageState:MutableState<MainPageState>,modifier:Modifier)
 {
     val data by vm.data.observeAsState()
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .height(200.dp)
             .animateContentSize()
             .padding(10.dp),
         elevation = 8.dp,
@@ -71,7 +70,7 @@ fun HotMap(vm: HotMapViewModel, mainPageState:MutableState<MainPageState>)
                                         MainPageState.CLOCK -> data?.get(i)?.get(currentDay)?.clock ?: 0
                                         MainPageState.MEDITATION -> data?.get(i)?.get(currentDay)?.breath ?: 0
                                     }
-                                    Cell(
+                                    CellInCharRiver(
                                         template,
                                         i == 3 && currentDay == CurrentIntDay
                                     )

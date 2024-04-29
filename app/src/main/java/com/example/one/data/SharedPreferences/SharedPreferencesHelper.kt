@@ -21,4 +21,8 @@ object SharedPreferencesHelper {
             sp.editIntData(key,tem-value)
         }
     }
+
+    fun getIfAudioOk(key: String): Boolean {
+        return sp.getBool(key)
+    }
 }

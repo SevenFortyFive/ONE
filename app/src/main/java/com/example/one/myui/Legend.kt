@@ -21,9 +21,9 @@ fun Legend(){
     ){
         Column {
             Row {
-                Cell(value = 0)
-                Cell(value = 5)
-                Cell(value = 10)
+                CellInCharRiver(value = 0)
+                CellInCharRiver(value = 5)
+                CellInCharRiver(value = 10)
             }
             Row {
                 TextCell(string = "少")

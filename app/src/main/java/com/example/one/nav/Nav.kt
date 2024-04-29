@@ -1,6 +1,7 @@
 package com.example.one.nav
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -16,8 +17,11 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.example.one.page.OthersPage
 import com.example.one.page.TodoPage
+import com.example.one.helper.LocalDpHelper
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -57,7 +61,7 @@ fun BottomMenu(navController: NavController) {
         BottomMenuScreen.Analyse,
         BottomMenuScreen.Others
     )
-    BottomNavigation(contentColor = Color.White) {
+    BottomNavigation(modifier = Modifier.height((LocalDpHelper.getDpHeight()*0.06).dp),contentColor = Color.White) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
         menuItems.forEach {
@@ -71,7 +75,6 @@ fun BottomMenu(navController: NavController) {
                     if(currentRoute != it.route)
                     {
                         navController.navigate(it.route)
-                    }else{
                     }
                 },
                 icon = {

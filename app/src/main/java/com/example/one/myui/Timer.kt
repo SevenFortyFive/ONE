@@ -39,12 +39,11 @@ import kotlin.math.sin
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MyTimer(viewModel: TimerViewModel, mainPageState: MutableState<MainPageState>) {
+fun MyTimer(viewModel: TimerViewModel, mainPageState: MutableState<MainPageState>,modifier: Modifier) {
 
     Card (
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .height(400.dp)
             .animateContentSize()
             .padding(10.dp),
         elevation = 8.dp,

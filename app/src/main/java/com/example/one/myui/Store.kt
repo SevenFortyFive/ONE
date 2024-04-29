@@ -19,6 +19,8 @@ import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -26,16 +28,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.one.R
-import com.example.one.data.PlayerData.AudioData
-import com.example.one.data.PlayerData.getExtAudioList
+import com.example.one.data.SharedPreferences.SharedPreferencesHelper
+import com.example.one.data.StoreData.ExtAudioData
+import com.example.one.data.StoreData.getExtAudioList
+import com.example.one.helper.unlockAudio
 import com.example.one.ui.theme.ONETheme
+import com.example.one.vm.StoreViewModel
 
 @Composable
 fun Store(){
+
+    val vm:StoreViewModel = viewModel()
+    val balance = vm.balance.observeAsState()
+
     Card(modifier = Modifier
         .fillMaxWidth()
         .height(350.dp)
@@ -44,6 +54,9 @@ fun Store(){
         elevation = 8.dp,
         shape = RoundedCornerShape(10.dp)) {
         LazyColumn {
+            item {
+                StoreHeader(balance)
+            }
             items(getExtAudioList())
             {
                 Item(it)
@@ -53,7 +66,7 @@ fun Store(){
 }
 
 @Composable
-fun Item(data: AudioData){
+fun Item(data: ExtAudioData){
     Card( modifier = Modifier
         .fillMaxWidth()
         .height(100.dp)
@@ -76,13 +89,27 @@ fun Item(data: AudioData){
             {
 
                 Button(
-                    onClick = {},
+                    onClick = {
+                        unlockAudio(data) },
                     modifier = Modifier.padding(20.dp)
                 ) {
                     Text(text ="购买")
                 }
             }
         }
+    }
+}
+
+@Composable
+fun StoreHeader(balance: State<Int?>) {
+    Card( modifier = Modifier
+        .fillMaxWidth()
+        .height(80.dp)
+        .animateContentSize()
+        .padding(10.dp),
+        elevation = 8.dp,
+        shape = RoundedCornerShape(10.dp)){
+        Text(text = "余额:"+balance.value.toString())
     }
 }
 
@@ -124,6 +151,6 @@ fun CDInStore(imgID: Int, modifier: Modifier) {
 @Composable
 fun Test(){
     ONETheme {
-        Store()
+//        StoreHeader(balance)
     }
 }

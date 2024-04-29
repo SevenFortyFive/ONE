@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.view.animation.LinearInterpolator
+import com.example.one.data.SharedPreferences.BALANCE
 import com.example.one.data.SharedPreferences.BREATH_TIME_KEY
 import com.example.one.data.SharedPreferences.SharedPreferencesHelper
 import com.example.one.timer.TimerStatus.PausedStatus
@@ -85,13 +86,18 @@ object AnimatorController{
         }
     }
 
+    /**
+     * 计数完成时调用
+     */
     fun complete() {
         if(timerViewModel != null)
         {
             timerViewModel!!.totalTime = 0
             timerViewModel!!.status = CompletedStatus(timerViewModel!!)
+            // 调用热图viewmodel修改数据
             hotMapViewModel!!.update(1)
             SharedPreferencesHelper.add(BREATH_TIME_KEY, this.thistimevalue)
+            SharedPreferencesHelper.add(BALANCE,this.thistimevalue)
         }
     }
 }

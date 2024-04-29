@@ -16,22 +16,22 @@ object MySharedPreference{
     }
 
 
-    suspend fun getInt(key:String):Int
+    fun getInt(key:String):Int
     {
-        return SharedPreferences.getInt(key,-1)
+        return SharedPreferences.getInt(key,0)
     }
 
-    suspend fun getBool(key: String):Boolean{
+    fun getBool(key: String):Boolean{
         return SharedPreferences.getBoolean(key,false)
     }
 
-    suspend fun editBooleanData(key:String,value:Boolean):Boolean
+    fun editBooleanData(key:String,value:Boolean):Boolean
     {
         editor.putBoolean(key,value)
         return editor.commit()
     }
 
-    suspend fun editIntData(key:String, value:Int):Boolean
+    fun editIntData(key:String, value:Int):Boolean
     {
         editor.putInt(key,value)
         return editor.commit()

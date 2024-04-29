@@ -18,7 +18,7 @@ fun getTimeScr():String{
     else if(hour < 18)
         "下午"
     else
-        "晚上"
+        "傍晚"
 }
 
 val CurrentIntYear:Int = getCurrentYear()

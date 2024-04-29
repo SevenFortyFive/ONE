@@ -11,6 +11,9 @@ import androidx.media3.exoplayer.ExoPlayer
 import com.example.one.data.PlayerData.AudioData
 import com.example.one.data.PlayerData.PlayerState
 import com.example.one.data.PlayerData.getAudioList
+import com.example.one.data.SharedPreferences.SharedPreferencesHelper
+import com.example.one.data.StoreData.ExtAudioData
+import com.example.one.data.StoreData.getExtAudioList
 import com.example.one.player.ExoPlayerManager
 import kotlinx.coroutines.launch
 
@@ -18,9 +21,9 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(): ViewModel() {
     private var player: ExoPlayer = ExoPlayerManager.getExoPlayer()!!
 
-    private var datalist = getAudioList()
+    private var dataList:MutableList<AudioData> = getAudioList().toMutableList()
 
-    private var _currentAudioData: MutableLiveData<AudioData> = MutableLiveData(datalist[0])
+    private var _currentAudioData: MutableLiveData<AudioData> = MutableLiveData(dataList[0])
     val currentAudioData: LiveData<AudioData>
         get() = _currentAudioData
 
@@ -30,22 +33,32 @@ class PlayerViewModel(): ViewModel() {
         get() = _currentState
 
     // 上一首歌的名字
-    private var _preName:MutableLiveData<String> = MutableLiveData(datalist[getPreIdx(player.currentMediaItemIndex)].name)
+    private var _preName:MutableLiveData<String> = MutableLiveData(dataList[getPreIdx(player.currentMediaItemIndex)].name)
     val preName: LiveData<String>
         get() = _preName
 
     // 下一首歌的名字
-    private var _nextName:MutableLiveData<String> = MutableLiveData(datalist[getNextIdx(player.currentMediaItemIndex)].name)
+    private var _nextName:MutableLiveData<String> = MutableLiveData(dataList[getNextIdx(player.currentMediaItemIndex)].name)
     val nextName: LiveData<String>
         get() = _nextName
 
     init {
         Log.d("com.example.one.vm.PlayerViewModel","Init")
+
         _currentState.postValue(PlayerState.LOADING)
         viewModelScope.launch {
-            datalist.forEach {
+            dataList.forEach {
                 val mediaItem = MediaItem.fromUri(Uri.parse(it.uri))
                 player.addMediaItem(mediaItem)
+            }
+
+            getExtAudioList().forEach{
+                if(SharedPreferencesHelper.getIfAudioOk(it.key))
+                {
+                    val mediaItem = MediaItem.fromUri(Uri.parse((it.uri)))
+                    player.addMediaItem(mediaItem)
+                    dataList.add(AudioData(it.uri,it.name,it.surface))
+                }
             }
         }
         player.repeatMode
@@ -79,9 +92,9 @@ class PlayerViewModel(): ViewModel() {
     }
 
     private fun onDataChanged(){
-        _preName.postValue(datalist[getPreIdx(player.currentMediaItemIndex)].name)
-        _nextName.postValue(datalist[getNextIdx(player.currentMediaItemIndex)].name)
-        _currentAudioData.postValue(datalist[player.currentMediaItemIndex])
+        _preName.postValue(dataList[getPreIdx(player.currentMediaItemIndex)].name)
+        _nextName.postValue(dataList[getNextIdx(player.currentMediaItemIndex)].name)
+        _currentAudioData.postValue(dataList[player.currentMediaItemIndex])
     }
 
     /**
@@ -89,7 +102,7 @@ class PlayerViewModel(): ViewModel() {
      */
     private fun getPreIdx(currentIdx: Int): Int {
         return if (currentIdx == 0)
-            this.datalist.size - 1
+            this.dataList.size - 1
         else {
             player.currentMediaItemIndex - 1
         }
@@ -99,10 +112,21 @@ class PlayerViewModel(): ViewModel() {
      * 从当前索引得到下一个索引
      */
     private fun getNextIdx(currentIdx: Int): Int {
-        return if (currentIdx == datalist.size - 1) {
+        return if (currentIdx == dataList.size - 1) {
             0
         } else {
             player.currentMediaItemIndex + 1
+        }
+    }
+
+    /**
+     * 外部调用，添加音乐曲目
+     */
+    fun addItem(audioData: ExtAudioData){
+        viewModelScope.launch {
+            dataList.add(AudioData(audioData.uri,audioData.name,audioData.surface))
+            val mediaItem = MediaItem.fromUri(Uri.parse((audioData.uri)))
+            player.addMediaItem(mediaItem)
         }
     }
 }

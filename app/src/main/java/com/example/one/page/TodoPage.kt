@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.one.myui.CharRiver
 import com.example.one.myui.MyTimer
+import com.example.one.myui.Player
 
 @Composable
 fun TodoPage()
@@ -14,6 +16,8 @@ fun TodoPage()
     {
         Column(modifier = Modifier
             .fillMaxSize()) {
+            CharRiver()
         }
+        Player()
     }
 }
