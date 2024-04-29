@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -25,19 +27,10 @@ class CharRiverViewmodel() :ViewModel() {
     // 保存滚动工作
     private var job: Job? = null
 
-    init {
-        getData("泥嚎")
-    }
+    private val _precision:MutableLiveData<Int> = MutableLiveData(30)
 
-    /**
-     * 设置数据内容
-     */
-    private fun getData(string:String)
-    {
-        viewModelScope.launch {
-            _data.value = PixelAnalyzer.analyzeCharacterPixels(string)
-        }
-    }
+    val precision:LiveData<Int>
+        get() = _precision
 
     /**
      * 讲数据进行滚动操作
@@ -74,19 +67,27 @@ class CharRiverViewmodel() :ViewModel() {
         return  job
     }
 
-    /**
-     * 供外界调用，进行状态转换
-     */
-    fun changeState(){
-        _state.value = !_state.value!!
-
-        if(_state.value == true)
+    fun start(){
+        if(_state.value == false)
         {
             this.job = getJob()
             this.job!!.start()
         }
-        else{
+        _state.value = true
+    }
+
+    fun stop(){
+        if(_state.value == true)
+        {
             this.job!!.cancel()
+        }
+        _state.value = false
+    }
+
+    fun setData(string:String,precision:Int){
+        _precision.value = precision
+        CoroutineScope(Dispatchers.IO).run {
+            _data.value = PixelAnalyzer.analyzeCharacterPixels(string,precision)
         }
     }
 }

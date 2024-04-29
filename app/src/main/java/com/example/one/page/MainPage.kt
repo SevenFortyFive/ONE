@@ -14,16 +14,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.one.myui.StateBox
 import com.example.one.myui.HotMap
 import com.example.one.myui.MainPageController
 import com.example.one.myui.MyTimer
-import com.example.one.myui.Player
 import com.example.one.helper.LocalDpHelper
-import com.example.one.ui.theme.ONETheme
+import com.example.one.setting.Setting
 import com.example.one.vm.HotMapViewModel
 import com.example.one.vm.MyHotMapViewModelFactory
 import com.example.one.vm.TimerViewModel
@@ -60,24 +58,13 @@ fun MainPage()
                 Column (modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    HotMap(hotMapViewModel,mainPageState,Modifier.height(LocalDpHelper.getUiDpHeight(0.2F)))
-                    Spacer(modifier = Modifier.height(10.dp))
-                    MyTimer(viewModel = timerViewModel,mainPageState,Modifier.height(LocalDpHelper.getUiDpHeight(0.5F)))
-                    Spacer(modifier = Modifier.height(10.dp))
-                    MainPageController(mainPageState,Modifier.height(LocalDpHelper.getUiDpHeight(0.1F)))
+                    HotMap(hotMapViewModel,mainPageState,Modifier.height(Setting.MainPageHotMapSize))
+                    Spacer(modifier = Modifier.height(2.dp))
+                    MainPageController(mainPageState,Modifier.height(Setting.MainPageControllerSize))
+                    Spacer(modifier = Modifier.height(2.dp))
+                    MyTimer(viewModel = timerViewModel,mainPageState,Modifier.height(Setting.MainPageTimerSize))
                 }
             }
         }
-    }
-
-    Player()
-}
-
-@Preview(showBackground = true)
-@Composable
-fun TestMainPage()
-{
-    ONETheme {
-        MainPage()
     }
 }

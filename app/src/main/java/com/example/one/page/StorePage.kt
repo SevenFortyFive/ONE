@@ -1,20 +1,15 @@
 package com.example.one.page
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.one.myui.CharRiver
+import com.example.one.myui.StoreUi
 
 @Composable
-fun TodoPage()
-{
+fun StorePage(){
     Box(modifier = Modifier.fillMaxSize())
     {
-        Column(modifier = Modifier
-            .fillMaxSize()) {
-            CharRiver()
-        }
+        StoreUi()
     }
 }

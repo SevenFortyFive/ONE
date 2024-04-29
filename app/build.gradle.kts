@@ -55,12 +55,16 @@ android {
 }
 
 dependencies {
+    implementation("androidx.compose.material3:material3:1.2.1")
+    implementation("androidx.compose.material3:material3-window-size-class:1.2.1")
+    implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.0.0-alpha06")
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation (libs.androidx.material)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.material3.android)
     val room_version = "2.6.1"
 
     implementation(libs.androidx.room.runtime)
@@ -80,7 +84,6 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

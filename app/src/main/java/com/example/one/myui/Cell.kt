@@ -1,14 +1,10 @@
 package com.example.one.myui
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -18,11 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.one.helper.getColorForValue
-import com.example.one.setting.HotMapSetting
-import com.example.one.ui.theme.ONETheme
+import com.example.one.setting.Setting
 
 @Composable
 fun CellInCharRiver(value: Int, isToday:Boolean? = false, string: String?=null)
@@ -31,14 +25,14 @@ fun CellInCharRiver(value: Int, isToday:Boolean? = false, string: String?=null)
     val modifier = if(isToday == true)
     {
         Modifier
-            .size(HotMapSetting.CellSize, HotMapSetting.CellSize)
+            .size(Setting.CellSize, Setting.CellSize)
             .clip(RoundedCornerShape(2.dp))
             .border(BorderStroke(width = 1.dp, color = Color.Green))
             .background(color)
     }
     else{
         Modifier
-            .size(HotMapSetting.CellSize, HotMapSetting.CellSize)
+            .size(Setting.CellSize, Setting.CellSize)
             .clip(RoundedCornerShape(2.dp))
             .background(color)
     }
@@ -56,7 +50,7 @@ fun CellInCharRiver(value: Int, isToday:Boolean? = false, string: String?=null)
 fun EmptyCell(){
     Box(
         modifier = Modifier
-            .size(HotMapSetting.CellSize,HotMapSetting.CellSize)
+            .size(Setting.CellSize,Setting.CellSize)
             .clip(RoundedCornerShape(2.dp))
     )
 }
@@ -65,13 +59,13 @@ fun EmptyCell(){
 fun TextCell(string: String){
     Box(
         modifier = Modifier
-            .size(HotMapSetting.CellSize, HotMapSetting.CellSize)
+            .size(Setting.CellSize, Setting.CellSize)
             .clip(RoundedCornerShape(2.dp)),
     ){
         Text(text = string,
             modifier = Modifier.align(Alignment.Center)
                 .fillMaxSize(),
             textAlign = TextAlign.Center,
-            fontSize = HotMapSetting.MonthSize)
+            fontSize = Setting.MonthSize)
     }
 }

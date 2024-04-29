@@ -11,15 +11,15 @@ import android.graphics.Paint
  * 返回一个二维数组，字符中黑色为1，白色为0
  */
 object PixelAnalyzer {
-    fun analyzeCharacterPixels(character: String): Array<Array<Int>> {
+    fun analyzeCharacterPixels(character: String, precision: Int): Array<Array<Int>> {
         // 创建一个 Bitmap 对象来保存字符的像素信息
-        val bitmap = Bitmap.createBitmap(50 * character.length, 50, Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(precision * character.length, precision, Bitmap.Config.ARGB_8888)
         // 创建一个 Canvas 对象，用于在 Bitmap 上绘制字符
         val canvas = Canvas(bitmap)
         // 清空 Bitmap，设置全白背景
         canvas.drawColor(Color.WHITE)
         // 绘制字符在画布的中间位置
-        drawCharacterInCenter(character, canvas)
+        drawCharacterInCenter(character, canvas,precision)
 
         // 创建一个二维数组来存储像素信息
         val pixelArray = Array(bitmap.height) { Array(bitmap.width) { 0 } }
@@ -42,7 +42,7 @@ object PixelAnalyzer {
      * 在画布上画上字符
      * 返回bitmap
      */
-    private fun drawCharacterInCenter(character: String, canvas: Canvas) {
+    private fun drawCharacterInCenter(character: String, canvas: Canvas, precision: Int) {
         // 获取画布的宽度和高度
         val canvasWidth = canvas.width.toFloat()
         val canvasHeight = canvas.height.toFloat()
@@ -50,7 +50,7 @@ object PixelAnalyzer {
         // 创建一个 Paint 对象，设置字符的颜色、大小等信息
         val paint = Paint()
         paint.color = Color.BLACK // 设置字符颜色为黑色
-        paint.textSize = 50f // 设置字符大小为 50 像素
+        paint.textSize = (precision - 5).toFloat() // 设置字符大小为 50 像素
         paint.style = Paint.Style.FILL
 
         // 计算字符的宽度和高度

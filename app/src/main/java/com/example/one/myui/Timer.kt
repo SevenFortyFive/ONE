@@ -15,11 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
@@ -46,7 +47,9 @@ fun MyTimer(viewModel: TimerViewModel, mainPageState: MutableState<MainPageState
             .fillMaxWidth()
             .animateContentSize()
             .padding(10.dp),
-        elevation = 8.dp,
+        elevation =  CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        ),
         shape = RoundedCornerShape(10.dp)
     ){
         Column(
@@ -59,6 +62,7 @@ fun MyTimer(viewModel: TimerViewModel, mainPageState: MutableState<MainPageState
             ProgressCircle(viewModel)
             Spacer(modifier = Modifier.height(20.dp))
             EditText(viewModel)
+            Spacer(modifier = Modifier.padding(2.dp))
             Row {
                 StartButton(viewModel)
                 StopButton(viewModel)
@@ -79,13 +83,13 @@ private fun TimeLeftText(viewModel: TimerViewModel) {
 private fun EditText(viewModel: TimerViewModel) {
     Box(
         modifier = Modifier
-            .size(150.dp, 60.dp),
+            .size(150.dp, 50.dp),
         contentAlignment = Alignment.Center
     ) {
         if (viewModel.status.showEditText()) {
             TextField(
                 modifier = Modifier
-                    .size(100.dp, 30.dp),
+                    .size(100.dp, 100.dp),
                 value = if (viewModel.totalTime == 0L) "" else viewModel.totalTime.toString(),
                 onValueChange = viewModel::updateValue,
                 label = {  },
@@ -185,6 +189,6 @@ fun ProgressCircle(viewModel: TimerViewModel) {
 private fun CompletedText(viewModel: TimerViewModel) {
     Text(
         text = viewModel.status.completedString(),
-        color = MaterialTheme.colors.primary
+        color = MaterialTheme.colorScheme.onPrimary
     )
 }

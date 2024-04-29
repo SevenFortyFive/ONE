@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,9 +16,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
@@ -33,7 +36,6 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.one.R
-import com.example.one.data.SharedPreferences.SharedPreferencesHelper
 import com.example.one.data.StoreData.ExtAudioData
 import com.example.one.data.StoreData.getExtAudioList
 import com.example.one.helper.unlockAudio
@@ -41,22 +43,29 @@ import com.example.one.ui.theme.ONETheme
 import com.example.one.vm.StoreViewModel
 
 @Composable
-fun Store(){
+fun StoreUi(){
 
     val vm:StoreViewModel = viewModel()
     val balance = vm.balance.observeAsState()
 
+    Column {
+        StoreHeader(balance = balance)
+        Spacer(modifier = Modifier.height(10.dp))
+        StoreBody()
+    }
+}
+
+@Composable
+fun StoreBody(){
     Card(modifier = Modifier
-        .fillMaxWidth()
-        .height(350.dp)
+        .fillMaxSize()
         .animateContentSize()
         .padding(10.dp),
-        elevation = 8.dp,
+        elevation =  CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        ),
         shape = RoundedCornerShape(10.dp)) {
         LazyColumn {
-            item {
-                StoreHeader(balance)
-            }
             items(getExtAudioList())
             {
                 Item(it)
@@ -64,7 +73,6 @@ fun Store(){
         }
     }
 }
-
 @Composable
 fun Item(data: ExtAudioData){
     Card( modifier = Modifier
@@ -72,7 +80,9 @@ fun Item(data: ExtAudioData){
         .height(100.dp)
         .animateContentSize()
         .padding(10.dp),
-        elevation = 8.dp,
+        elevation =  CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        ),
         shape = RoundedCornerShape(10.dp)
     ) {
         Row(
@@ -88,7 +98,7 @@ fun Item(data: ExtAudioData){
                 modifier = Modifier.fillMaxWidth())
             {
 
-                Button(
+                ElevatedButton(
                     onClick = {
                         unlockAudio(data) },
                     modifier = Modifier.padding(20.dp)
@@ -107,7 +117,9 @@ fun StoreHeader(balance: State<Int?>) {
         .height(80.dp)
         .animateContentSize()
         .padding(10.dp),
-        elevation = 8.dp,
+        elevation =  CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        ),
         shape = RoundedCornerShape(10.dp)){
         Text(text = "余额:"+balance.value.toString())
     }

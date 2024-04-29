@@ -1,6 +1,7 @@
 package com.example.one.vm
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -16,7 +17,7 @@ class TimerViewModel : ViewModel() {
     /**
      * Total time user set in seconds
      */
-    var totalTime: Long by mutableStateOf(0)
+    var totalTime: Long by mutableLongStateOf(0)
 
     /**
      * Time left during countdown in seconds

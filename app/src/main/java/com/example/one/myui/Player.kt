@@ -7,30 +7,26 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,12 +39,10 @@ import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -68,54 +62,18 @@ fun Player(){
     val preName = vm.preName.observeAsState()
     val nextName = vm.nextName.observeAsState()
 
-    val show = remember {
-        mutableStateOf(false)
-    }
-
-    var offsetX by remember {
-        mutableStateOf((0).dp)
-    }
-//    var alpha by remember {
-//        mutableFloatStateOf(1F)
-//    }
-
-    if(!show.value){
-        offsetX = LocalDpHelper.getUiDpWidth(0.85F)
-//        alpha = 0.5F
-    }
-    else{
-        offsetX = (0).dp
-//        alpha = 1F
-    }
-
     Box(modifier = Modifier
-        .fillMaxSize()
-        .absoluteOffset(0.dp, LocalDpHelper.getUiDpHeight(0.3F)))
+        .fillMaxSize())
     {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(LocalDpHelper.getUiDpHeight(0.5F))
                 .animateContentSize()
-                .padding(10.dp)
-                .zIndex(1f)
-                .offset(
-                    x = animateDpAsState(targetValue = offsetX, label = "").value
-                )
-                .pointerInput(Unit) {
-                    detectDragGestures { _, dragAmount ->
-                        if (dragAmount.x > 10.dp.toPx()) {
-                            show.value = false
-                        }
-                    }
-                }
-//                .alpha(animateFloatAsState(alpha, label = "").value)
-                .clickable(onClick = {
-                    if(!show.value){
-                        show.value = true
-                    }
-                }),
-            elevation = 8.dp,
+                .padding(10.dp),
+            elevation =  CardDefaults.cardElevation(
+                defaultElevation = 2.dp
+            ),
             shape = RoundedCornerShape(10.dp)
         ) {
             Box(modifier = Modifier.fillMaxSize(),

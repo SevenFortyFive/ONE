@@ -11,7 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -25,7 +26,7 @@ import com.example.one.helper.CurrentIntYear
 import com.example.one.helper.getCaraWithLe
 import com.example.one.helper.getNumOfDay
 import com.example.one.page.MainPageState
-import com.example.one.setting.HotMapSetting
+import com.example.one.setting.Setting
 import com.example.one.vm.HotMapViewModel
 
 
@@ -39,7 +40,9 @@ fun HotMap(vm: HotMapViewModel, mainPageState:MutableState<MainPageState>,modifi
             .fillMaxWidth()
             .animateContentSize()
             .padding(10.dp),
-        elevation = 8.dp,
+        elevation =  CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        ),
         shape = RoundedCornerShape(10.dp)) {
             Row(modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.Center,
@@ -61,7 +64,7 @@ fun HotMap(vm: HotMapViewModel, mainPageState:MutableState<MainPageState>,modifi
                                     TextCell(string = getCaraWithLe(CurrentIntMonth - 3 + i))
                                 else
                                     EmptyCell()
-                                Spacer(modifier = Modifier.height(HotMapSetting.CellPadding))
+                                Spacer(modifier = Modifier.height(Setting.CellPadding))
                                 for (j in 1..7) {
                                     val template = when(mainPageState.value)
                                     {
@@ -77,11 +80,11 @@ fun HotMap(vm: HotMapViewModel, mainPageState:MutableState<MainPageState>,modifi
                                     if (currentDay++ == numOfDay)
                                         break;
                                     if (j != 7)
-                                        Spacer(modifier = Modifier.height(HotMapSetting.CellPadding))
+                                        Spacer(modifier = Modifier.height(Setting.CellPadding))
                                 }
                             }
                             if (k != numOfColumn || i != 3)
-                                Spacer(modifier = Modifier.width(HotMapSetting.CellPadding))
+                                Spacer(modifier = Modifier.width(Setting.CellPadding))
                         }
                     }
                 }
