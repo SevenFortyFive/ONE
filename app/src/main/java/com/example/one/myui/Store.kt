@@ -1,6 +1,7 @@
 package com.example.one.myui
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -16,14 +17,18 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -36,9 +41,13 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.one.R
+import com.example.one.data.SharedPreferences.BALANCE
+import com.example.one.data.SharedPreferences.MySharedPreference
+import com.example.one.data.SharedPreferences.SharedPreferencesHelper
 import com.example.one.data.StoreData.ExtAudioData
 import com.example.one.data.StoreData.getExtAudioList
 import com.example.one.helper.unlockAudio
+import com.example.one.setting.Setting
 import com.example.one.ui.theme.ONETheme
 import com.example.one.vm.StoreViewModel
 
@@ -51,12 +60,12 @@ fun StoreUi(){
     Column {
         StoreHeader(balance = balance)
         Spacer(modifier = Modifier.height(10.dp))
-        StoreBody()
+        StoreBody(vm::onBalanceChange)
     }
 }
 
 @Composable
-fun StoreBody(){
+fun StoreBody(onChangeBalance: () -> Unit) {
     Card(modifier = Modifier
         .fillMaxSize()
         .animateContentSize()
@@ -66,15 +75,68 @@ fun StoreBody(){
         ),
         shape = RoundedCornerShape(10.dp)) {
         LazyColumn {
+            item {
+                ItemDivider(string = "CD")
+            }
             items(getExtAudioList())
             {
-                Item(it)
+                Item(it,onChangeBalance)
+            }
+            item {
+               ItemDivider(string = "道具")
             }
         }
     }
 }
+
 @Composable
-fun Item(data: ExtAudioData){
+fun ItemDivider(string:String){
+    HorizontalDivider(modifier = Modifier.padding(10.dp),
+        thickness = Setting.StoreItemDividerHeight)
+    Text(text = string,
+        modifier = Modifier.padding(10.dp),
+        fontSize = Setting.StoreItemDividerFontSize)
+}
+@Composable
+fun Item(data: ExtAudioData, onChangeBalance: () -> Unit){
+    val showEnoughDialog = remember {
+        mutableStateOf(false)
+    }
+    val showNotEnoughDialog = remember {
+        mutableStateOf(false)
+    }
+    // 余额不足对话框
+    when{
+        showNotEnoughDialog.value ->
+            AlertDialogExample(
+                onDismissRequest = {showNotEnoughDialog.value = false },
+                onConfirmation = {
+                    showNotEnoughDialog.value = false
+                },
+                dialogTitle = "购买失败",
+                dialogText = "您的余额"+MySharedPreference.getInt(BALANCE)+"不足",
+                icon = Icons.Default.ShoppingCart
+            )
+    }
+    // 确认购买对话框
+    when{
+        showEnoughDialog.value ->
+            AlertDialogExample(
+                onDismissRequest = {showEnoughDialog.value = false },
+                onConfirmation = {
+                    showEnoughDialog.value = false
+                    // 解锁播放
+                    unlockAudio(data)
+                    // 余额处理
+                    SharedPreferencesHelper.sub(BALANCE,data.cost)
+                    // 通知商店余额变化
+                    onChangeBalance()
+                },
+                dialogTitle = "确认购买",
+                dialogText = "确认购买"+data.name,
+                icon = Icons.Default.ShoppingCart
+            )
+    }
     Card( modifier = Modifier
         .fillMaxWidth()
         .height(100.dp)
@@ -83,7 +145,7 @@ fun Item(data: ExtAudioData){
         elevation =  CardDefaults.cardElevation(
             defaultElevation = 2.dp
         ),
-        shape = RoundedCornerShape(10.dp)
+        shape = RoundedCornerShape(Setting.WholeElevation)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically) {
@@ -100,7 +162,14 @@ fun Item(data: ExtAudioData){
 
                 ElevatedButton(
                     onClick = {
-                        unlockAudio(data) },
+                        if(MySharedPreference.getInt(BALANCE) >= data.cost){
+                            // 激活确认购买对话框
+                            showEnoughDialog.value = true
+                        }else{
+                            // 激活余额不足对话框
+                            showNotEnoughDialog.value = true
+                        }
+                              },
                     modifier = Modifier.padding(20.dp)
                 ) {
                     Text(text ="购买")

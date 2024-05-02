@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.one.ui.theme.ONETheme
 
 @Composable
 fun Legend(){
@@ -21,9 +19,9 @@ fun Legend(){
     ){
         Column {
             Row {
-                CellInCharRiver(value = 0)
-                CellInCharRiver(value = 5)
-                CellInCharRiver(value = 10)
+                Cell(value = 0)
+                Cell(value = 5)
+                Cell(value = 10)
             }
             Row {
                 TextCell(string = "少")
@@ -31,13 +29,5 @@ fun Legend(){
                 TextCell(string = "多")
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun TestLegend(){
-    ONETheme {
-        Legend()
     }
 }

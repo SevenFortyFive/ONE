@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import com.example.one.myui.CharRiver
 
 @Composable
-fun TodoPage()
+fun CharRiverPage()
 {
     Box(modifier = Modifier.fillMaxSize())
     {

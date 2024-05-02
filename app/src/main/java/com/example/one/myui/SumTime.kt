@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.one.setting.Setting
 import com.example.one.vm.SPViewModel
 
 @Composable
@@ -35,13 +36,12 @@ fun SumTime(){
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(160.dp)
             .animateContentSize()
             .padding(10.dp),
         elevation =  CardDefaults.cardElevation(
             defaultElevation = 2.dp
         ),
-        shape = RoundedCornerShape(10.dp)
+        shape = RoundedCornerShape(Setting.WholeElevation)
     ) {
         Column(modifier = Modifier.padding(20.dp)
             ) {
@@ -63,7 +63,7 @@ fun SumTime(){
 @Composable
 fun SmallSumTime(type:String,value: Int?) {
     Card(
-        modifier = Modifier.fillMaxHeight()
+        modifier =Modifier
         .width(100.dp)
         .animateContentSize()
         .padding(10.dp),

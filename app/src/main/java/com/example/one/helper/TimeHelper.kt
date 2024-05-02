@@ -3,6 +3,7 @@ package com.example.one.helper
 import java.time.DateTimeException
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.Month
 import java.time.YearMonth
 
 /**
@@ -53,6 +54,14 @@ fun getCurrentYear():Int{
 fun getCurrentMonth():Int{
     return LocalDate.now().monthValue
 }
+
+/**
+ * 返回当前月份周一是星期几
+ */
+fun getCurrentMonthBeginWithWhichInMonth(year: Int = CurrentIntYear,month: Int = CurrentIntMonth): Int {
+    return LocalDate.of(year, month,1).dayOfWeek.value
+}
+
 
 /**
  * 检查输入日期是否存在

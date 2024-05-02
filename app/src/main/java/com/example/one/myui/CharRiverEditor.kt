@@ -7,16 +7,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -25,6 +30,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -34,10 +40,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.one.data.CharRiverData.getCharRiverPrecisionDataList
+import com.example.one.setting.Setting
 
 @Composable
 fun CharRiverEditor(
     modifier: Modifier,
+    onLoading: State<Boolean?>,
     start: () -> Unit,
     stop: () -> Unit,
     setData: (String, Int) -> Unit
@@ -59,8 +67,12 @@ fun CharRiverEditor(
                 elevation =  CardDefaults.cardElevation(
                     defaultElevation = 2.dp
                 ),
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(Setting.WholeElevation)
             ) {
+                Box(modifier = Modifier.fillMaxWidth().height(32.dp))
+                {
+                    LoadingIndicator(loading = onLoading)
+                }
                 Column(verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxSize()) {
@@ -109,7 +121,8 @@ fun InputText(text: MutableState<String>, precision: MutableIntState)
             .padding(2.dp)
             .width(200.dp),
         maxLines = 1,
-        singleLine = true
+        singleLine = true,
+        trailingIcon = { Icon(Icons.Filled.Settings, contentDescription = "Localized description") }
     )
     Spacer(modifier = Modifier.height(10.dp))
     PrecisionInput(precision)

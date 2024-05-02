@@ -4,7 +4,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -19,39 +18,34 @@ import com.example.one.helper.getColorForValue
 import com.example.one.setting.Setting
 
 @Composable
-fun CellInCharRiver(value: Int, isToday:Boolean? = false, string: String?=null)
+fun Cell(value: Int, isToday:Boolean? = false)
 {
     val color =  getColorForValue(value)
     val modifier = if(isToday == true)
     {
         Modifier
             .size(Setting.CellSize, Setting.CellSize)
-            .clip(RoundedCornerShape(2.dp))
+            .clip(RoundedCornerShape(Setting.CellCornerSize))
             .border(BorderStroke(width = 1.dp, color = Color.Green))
             .background(color)
     }
     else{
         Modifier
             .size(Setting.CellSize, Setting.CellSize)
-            .clip(RoundedCornerShape(2.dp))
+            .clip(RoundedCornerShape(Setting.CellCornerSize))
             .background(color)
     }
     Box(
         modifier
-    ){
-        if(string!=null)
-        {
-            Text(text = string,modifier = Modifier.align(Alignment.Center))
-        }
-    }
+    )
 }
 
 @Composable
-fun EmptyCell(){
+fun EmptyCell(modifier: Modifier = Modifier){
     Box(
-        modifier = Modifier
-            .size(Setting.CellSize,Setting.CellSize)
-            .clip(RoundedCornerShape(2.dp))
+        modifier = modifier
+            .size(Setting.CellSize, Setting.CellSize)
+            .clip(RoundedCornerShape(Setting.CellCornerSize))
     )
 }
 
@@ -60,12 +54,55 @@ fun TextCell(string: String){
     Box(
         modifier = Modifier
             .size(Setting.CellSize, Setting.CellSize)
-            .clip(RoundedCornerShape(2.dp)),
+            .clip(RoundedCornerShape(Setting.CellCornerSize)),
+        contentAlignment = Alignment.Center
     ){
         Text(text = string,
-            modifier = Modifier.align(Alignment.Center)
-                .fillMaxSize(),
             textAlign = TextAlign.Center,
-            fontSize = Setting.MonthSize)
+            fontSize = Setting.CellTextSize)
+    }
+}
+
+@Composable
+fun ComprehensiveHotMapCell(value: Int, isToday:Boolean? = false){
+    val color =  getColorForValue(value)
+    val modifier = if(isToday == true)
+    {
+        Modifier
+            .size(Setting.ComprehensiveHotMapCellSize, Setting.ComprehensiveHotMapCellSize)
+            .clip(RoundedCornerShape(Setting.ComprehensiveCoronerSize))
+            .border(BorderStroke(width = 1.dp, color = Color.Green))
+            .background(color)
+    }
+    else{
+        Modifier
+            .size(Setting.ComprehensiveHotMapCellSize, Setting.ComprehensiveHotMapCellSize)
+            .clip(RoundedCornerShape(Setting.ComprehensiveCoronerSize))
+            .background(color)
+    }
+    Box(
+        modifier
+    )
+}
+@Composable
+fun ComprehensiveEmptyCell(modifier:Modifier = Modifier){
+    Box(
+        modifier = modifier
+            .size(Setting.ComprehensiveHotMapCellSize, Setting.ComprehensiveHotMapCellSize)
+            .clip(RoundedCornerShape(Setting.ComprehensiveCoronerSize))
+    )
+}
+
+@Composable
+fun ComprehensiveTextCell(string:String){
+    Box(
+        modifier = Modifier
+            .size(Setting.ComprehensiveHotMapCellSize, Setting.ComprehensiveHotMapCellSize)
+            .clip(RoundedCornerShape(Setting.ComprehensiveCoronerSize)),
+        contentAlignment = Alignment.Center
+    ){
+        Text(text = string,
+            textAlign = TextAlign.Center,
+            fontSize = Setting.ComprehensiveTextSize)
     }
 }

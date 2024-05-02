@@ -3,6 +3,7 @@ package com.example.one.myui
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -34,12 +36,12 @@ fun CharRiver(){
 
     val data by vm.data.observeAsState()
 
-    val state = vm.state.observeAsState()
+    val onLoading = vm.onLoading.observeAsState()
 
     val precision by vm.precision.observeAsState()
 
     val ifShow = remember {
-        mutableStateOf(true)
+        mutableStateOf(false)
     }
 
     Box(modifier = Modifier
@@ -54,31 +56,46 @@ fun CharRiver(){
       contentAlignment = Alignment.Center
     )
     {
-        Column {
+        LoadingIndicator(loading = onLoading)
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .align(Alignment.Center),
+            contentAlignment = Alignment.Center){
             if(data != null)
             {
-                Column {
-                    for(row in data?.indices!!)
-                    {
-                        Row {
-                            for( col in data!![row].indices)
-                            {
-                                CellInCharRiver(value = data!![row][col],precision)
+                Box(modifier = Modifier.align(Alignment.Center)) {
+                    Column {
+                        for(row in data?.indices!!)
+                        {
+                            Row {
+                                for( col in data!![row].indices)
+                                {
+                                    CellInCharRiver(value = data!![row][col],precision)
+                                }
                             }
                         }
                     }
                 }
             }
+            else{
+
+                Column(modifier = Modifier.fillMaxSize(),
+                    Arrangement.Center,
+                    Alignment.CenterHorizontally) {
+                    Text(text = "长按界面来编辑并且启用此功能")
+                    Text(text = "初次加载时间较长")
+                }
+            }
         }
         if(ifShow.value)
         {
-            CharRiverEditor(Modifier,vm::start,vm::stop,vm::setData)
+            CharRiverEditor(Modifier,onLoading,vm::start,vm::stop,vm::setData)
         }
     }
 }
 
 @Composable
-fun CellInCharRiver(value: Int,pre:Int? = 30)
+fun CellInCharRiver(value: Int, pre:Int? = 30)
 {
     val color = if(value != 0)
     {
@@ -90,7 +107,7 @@ fun CellInCharRiver(value: Int,pre:Int? = 30)
     Box(
         modifier = Modifier
             .padding(1.dp)
-            .size((LocalDpHelper.getDpHeight().dp - (LocalDpHelper.getDpHeight() * 0.06).dp) / pre!! - 4.dp)
+            .size((LocalDpHelper.getDpHeight().dp - 100.dp) / pre!! - 2.dp)
             .clip(RoundedCornerShape(2.dp))
             .background(color)
     )

@@ -2,7 +2,6 @@ package com.example.one
 
 import com.example.one.vm.PlayerViewModel
 import android.os.Bundle
-import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels

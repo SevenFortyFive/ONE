@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CharRiverViewmodel() :ViewModel() {
     // 保存供外界观察的数据对象
@@ -18,11 +19,11 @@ class CharRiverViewmodel() :ViewModel() {
     val data:LiveData<Array<Array<Int>>>
         get() = _data
 
-    private val _state:MutableLiveData<Boolean> = MutableLiveData(false)
+    private val _onLoading:MutableLiveData<Boolean> = MutableLiveData(false)
 
     // 当前滚动状态，供外界观察
-    val state:LiveData<Boolean>
-        get() = _state
+    val onLoading:LiveData<Boolean>
+        get() = _onLoading
 
     // 保存滚动工作
     private var job: Job? = null
@@ -68,26 +69,34 @@ class CharRiverViewmodel() :ViewModel() {
     }
 
     fun start(){
-        if(_state.value == false)
+        if(_onLoading.value == false)
         {
             this.job = getJob()
             this.job!!.start()
         }
-        _state.value = true
     }
 
     fun stop(){
-        if(_state.value == true)
+        if(_onLoading.value == true)
         {
             this.job!!.cancel()
         }
-        _state.value = false
     }
 
     fun setData(string:String,precision:Int){
         _precision.value = precision
-        CoroutineScope(Dispatchers.IO).run {
-            _data.value = PixelAnalyzer.analyzeCharacterPixels(string,precision)
+        viewModelScope.launch {
+            _onLoading.value = true
+
+            delay(1000)
+
+            // 在 IO 线程中执行 analyzeCharacterPixels 函数
+            val pixelArray = withContext(Dispatchers.IO) {
+                PixelAnalyzer.analyzeCharacterPixels(string, precision)
+            }
+
+            _data.value = pixelArray
+            _onLoading.value = false
         }
     }
 }

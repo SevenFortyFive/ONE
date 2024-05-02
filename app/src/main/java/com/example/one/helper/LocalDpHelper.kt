@@ -16,6 +16,7 @@ object LocalDpHelper {
         dpHeight = (displayMetrics.heightPixels / displayMetrics.density)
         dpWidth = (displayMetrics.widthPixels / displayMetrics.density)
 
+        Log.d("LocalDp","输出屏幕信息")
         Log.d("LocalDp", dpWidth.toString())
         Log.d("LocalDp", dpHeight.toString())
     }

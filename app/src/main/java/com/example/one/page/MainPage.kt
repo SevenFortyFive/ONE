@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,45 +26,50 @@ import com.example.one.vm.HotMapViewModel
 import com.example.one.vm.MyHotMapViewModelFactory
 import com.example.one.vm.TimerViewModel
 
-
-enum class MainPageState{
-    BREATH,
-    CLOCK,
-    DRINK,
-    MEDITATION
-}
-
 @Composable
 fun MainPage()
 {
-    val mainPageState = remember {
-        mutableStateOf(MainPageState.BREATH)
-    }
     // 提升
     val timerViewModel: TimerViewModel = viewModel(LocalContext.current as ComponentActivity)
     val hotMapViewModel: HotMapViewModel = viewModel(LocalContext.current as ComponentActivity
         ,factory = MyHotMapViewModelFactory(LocalContext.current.applicationContext as Application)
     )
 
-    Box(modifier = Modifier.fillMaxSize()){
-        Column {
-            Row {
-                StateBox(mainPageState,Modifier.height(LocalDpHelper.getUiDpHeight(0.05F)))
-            }
+    val mainPageState = hotMapViewModel.Type.observeAsState()
 
-            Spacer(modifier = Modifier.height(10.dp))
-            Box(modifier = Modifier.fillMaxSize())
-            {
-                Column (modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ){
-                    HotMap(hotMapViewModel,mainPageState,Modifier.height(Setting.MainPageHotMapSize))
-                    Spacer(modifier = Modifier.height(2.dp))
-                    MainPageController(mainPageState,Modifier.height(Setting.MainPageControllerSize))
-                    Spacer(modifier = Modifier.height(2.dp))
-                    MyTimer(viewModel = timerViewModel,mainPageState,Modifier.height(Setting.MainPageTimerSize))
+    if(LocalDpHelper.getDpHeight() > LocalDpHelper.getDpWidth())
+    {
+            Column(modifier = Modifier.fillMaxSize()) {
+                Row(modifier = Modifier.weight(0.5f)) {
+                    StateBox(mainPageState,Modifier)
                 }
+                Spacer(modifier = Modifier.height(10.dp))
+                Box(modifier = Modifier.weight(9f))
+                {
+                    Column (modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        HotMap(hotMapViewModel,mainPageState,Modifier.weight(2.5f))
+                        Spacer(modifier = Modifier.height(2.dp))
+                        MyTimer(viewModel = timerViewModel,mainPageState,Modifier.weight(5f))
+                        Spacer(modifier = Modifier.height(2.dp))
+                        MainPageController(hotMapViewModel::changeType,Modifier.weight(1f))
+                    }
+                }
+            
+        }
+    }else{
+        Row {
+            Column(modifier = Modifier.weight(0.5f)) {
+                HotMap(vm = hotMapViewModel, mainPageState = mainPageState, modifier = Modifier.weight(4f))
+                Spacer(modifier = Modifier.height(10.dp))
+                MainPageController(changeType = hotMapViewModel::changeType, modifier = Modifier.weight(1f))
+            }
+            Spacer(modifier = Modifier.width(10.dp))
+            Column(modifier = Modifier.weight(0.5f)) {
+                MyTimer(viewModel = timerViewModel, mainPageState = mainPageState, modifier = Modifier)
             }
         }
     }
+
 }

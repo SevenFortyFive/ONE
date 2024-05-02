@@ -2,6 +2,7 @@ package com.example.one.data.NavData
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -13,7 +14,8 @@ sealed class NavigationMenuScreen (
     val title: String
 ){
     data object MainPage : NavigationMenuScreen("MainPage", Icons.Default.Home,"主页")
-    data object Analyse : NavigationMenuScreen("TodoPage", Icons.Default.DateRange,"代办")
-    data object Others : NavigationMenuScreen("OthersPage", Icons.Default.Menu,"用户")
-    data object Store:NavigationMenuScreen("Store",Icons.Default.ShoppingCart,"商店")
+    data object CharRiverPage : NavigationMenuScreen("CharRiverPage", Icons.Default.DateRange,"词牌")
+    data object OthersPage : NavigationMenuScreen("OthersPage", Icons.Default.Menu,"用户")
+    data object StorePage:NavigationMenuScreen("StorePage",Icons.Default.ShoppingCart,"商店")
+    data object AnalysePage : NavigationMenuScreen("AnalysePage",Icons.Default.Edit,"分析")
 }

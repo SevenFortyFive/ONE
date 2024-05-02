@@ -4,6 +4,11 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import com.example.one.setting.Setting
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * @author yooo_fan
@@ -18,11 +23,13 @@ object PixelAnalyzer {
         val canvas = Canvas(bitmap)
         // 清空 Bitmap，设置全白背景
         canvas.drawColor(Color.WHITE)
-        // 绘制字符在画布的中间位置
+
         drawCharacterInCenter(character, canvas,precision)
 
         // 创建一个二维数组来存储像素信息
-        val pixelArray = Array(bitmap.height) { Array(bitmap.width) { 0 } }
+        val pixelArray = Array(bitmap.height) {
+            Array(if(bitmap.width > Setting.CharRiverMinSize) bitmap.width else Setting.CharRiverMinSize)
+            { 0 } }
 
         // 遍历 Bitmap 中的像素，获取像素信息并存储到二维数组中
         for (x in 0 until bitmap.width) {
@@ -34,6 +41,9 @@ object PixelAnalyzer {
                 pixelArray[y][x] = if (isBlack) 1 else 0
             }
         }
+        // 回收bitmap资源
+        bitmap.recycle()
+
         return pixelArray
     }
 

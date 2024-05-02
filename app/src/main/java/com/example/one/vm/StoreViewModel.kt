@@ -20,7 +20,7 @@ class StoreViewModel: ViewModel() {
         }
     }
 
-    fun onChangeBalanceChange(){
+    fun onBalanceChange(){
         viewModelScope.launch {
             _balance.value = MySharedPreference.getInt(BALANCE)
         }

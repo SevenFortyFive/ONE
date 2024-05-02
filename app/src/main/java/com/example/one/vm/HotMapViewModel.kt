@@ -1,18 +1,22 @@
 package com.example.one.vm
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
+import com.example.one.data.MainPageState
 import com.example.one.data.SQLite.db.MyHotMapDatabase
 import com.example.one.data.SQLite.entity.MyHotMapData
 import com.example.one.data.SQLite.repository.MyHotMapDataRepository
 import com.example.one.helper.CurrentIntDay
 import com.example.one.helper.CurrentIntMonth
 import com.example.one.helper.CurrentIntYear
+import com.example.one.helper.MessageHelper
 import com.example.one.helper.getCurrentDay
 import com.example.one.helper.getCurrentMonthAndYear
 import com.example.one.helper.getNewHotMapData
@@ -29,6 +33,11 @@ class HotMapViewModel(private val app:Application):AndroidViewModel(app) {
             "myhotmapdata.db"
         ).build()
     }
+
+    // 保存主页的状态
+    private var _Type:MutableLiveData<MainPageState> = MutableLiveData(MainPageState.BREATH)
+    val Type:LiveData<MainPageState>
+        get() = _Type
 
     //初始化Repository
     private var myHotMapDataRepository: MyHotMapDataRepository = MyHotMapDataRepository(db)
@@ -94,6 +103,37 @@ class HotMapViewModel(private val app:Application):AndroidViewModel(app) {
                 _data.value = dataCopied.clone()
                 myHotMapDataRepository.modify(temData)
             }
+        }
+    }
+
+    fun changeType(changeTo:MainPageState)
+    {
+        viewModelScope.launch {
+            _Type.value = changeTo
+        }
+    }
+
+    fun sendPareTextMessage(context: Context,data:String){
+        viewModelScope.launch {
+            MessageHelper.sendPareText(context,data)
+        }
+    }
+
+    fun sharDetailHotMapMessage(context: Context){
+        viewModelScope.launch {
+            val builder = StringBuilder()
+            val formattedString = "%-6s | %-3s| %-3s| %-5s | %-5s\n"
+            builder.append(String.format(formattedString,"年","月","日","深呼吸","番茄钟"))
+            myHotMapDataRepository.getAllMyData().forEach{
+                builder.append(String.format(formattedString,
+                    it.year.toString(),
+                    it.month.toString(),
+                    it.day.toString(),
+                    it.breath.toString(),
+                    it.clock.toString())
+                )
+            }
+            sendPareTextMessage(context,builder.toString())
         }
     }
 }

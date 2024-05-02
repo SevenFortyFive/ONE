@@ -22,7 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -32,15 +32,16 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.one.data.MainPageState
 import com.example.one.helper.TimeFormatUtils
-import com.example.one.page.MainPageState
+import com.example.one.setting.Setting
 import com.example.one.vm.TimerViewModel
 import kotlin.math.cos
 import kotlin.math.sin
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MyTimer(viewModel: TimerViewModel, mainPageState: MutableState<MainPageState>,modifier: Modifier) {
+fun MyTimer(viewModel: TimerViewModel, mainPageState: State<MainPageState?>, modifier: Modifier) {
 
     Card (
         modifier = modifier
@@ -50,10 +51,10 @@ fun MyTimer(viewModel: TimerViewModel, mainPageState: MutableState<MainPageState
         elevation =  CardDefaults.cardElevation(
             defaultElevation = 2.dp
         ),
-        shape = RoundedCornerShape(10.dp)
+        shape = RoundedCornerShape(Setting.WholeElevation)
     ){
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.align(Alignment.CenterHorizontally),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
