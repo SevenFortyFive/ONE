@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.KeyboardArrowLeft
@@ -73,7 +74,7 @@ fun Player(){
     )
 
     val playerState = vm.currentState.observeAsState()
-//    val currentData = vm.currentAudioData.observeAsState()
+    val currentData by vm.currentAudioData.observeAsState()
 
     Card(
         modifier = Modifier
@@ -94,14 +95,18 @@ fun Player(){
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CD(isPlaying = (playerState.value == PlayerState.PLAYING),
-                    imgID = /*(currentData.value as MyAudioData).surfaceId*/R.raw.img8,
+
+                    imgID = currentData?.surfaceId ?: R.raw.img1,
+
                     modifier = Modifier)
                 Spacer(modifier = Modifier.height(2.dp))
                 Row(modifier = Modifier
-                    .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround){
-                    Column {
-                        Text(text = /*currentData.value!!.name*/"", maxLines = 1, fontWeight = FontWeight.Bold)
+                    .fillMaxWidth(),){
+                    Column(modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally) {
+
+                        Text(text = currentData?.name ?: "尚未加载", maxLines = 1, fontWeight = FontWeight.Bold)
+
                         Text(text = "无名", maxLines = 1)
                     }
                     Spacer(modifier = Modifier.width(10.dp))
@@ -111,7 +116,8 @@ fun Player(){
                         mutableStateOf(false)
                     }
 
-                    Row {
+                    Row(modifier = Modifier.weight(1f),
+                        Arrangement.Center) {
                         IconToggleButton(checked = checked, onCheckedChange = {checked = it}) {
                             if(checked)
                             {
@@ -139,7 +145,12 @@ fun Player(){
                             vm.pause()
                         }
                     }) {
-                        Icon(imageVector = Icons.Rounded.PlayArrow, contentDescription = "begin or pause")
+                        if (playerState.value == PlayerState.PLAYING)
+                        {
+                            Icon(imageVector = Icons.Rounded.Close, contentDescription = "pause")
+                        }else{
+                            Icon(imageVector = Icons.Rounded.PlayArrow, contentDescription = "begin")
+                        }
                     }
                     IconButton(onClick = { vm.nextAudio() }) {
                         Icon(imageVector = Icons.Rounded.KeyboardArrowRight, contentDescription = "next audio")

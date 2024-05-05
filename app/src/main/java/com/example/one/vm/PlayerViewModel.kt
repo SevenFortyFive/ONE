@@ -27,9 +27,9 @@ class PlayerViewModel(private val app: Application): AndroidViewModel(app) {
 
     private var dataList: MutableList<MyAudioData>? = mutableListOf()
 
-//    private var _currentAudioData: MutableLiveData<MyAudioData> = MutableLiveData()
-//    val currentAudioData: LiveData<MyAudioData>
-//        get() = _currentAudioData
+    private var _currentAudioData: MutableLiveData<MyAudioData> = MutableLiveData()
+    val currentAudioData: LiveData<MyAudioData>
+        get() = _currentAudioData
 
     private var _currentState: MutableLiveData<PlayerState> = MutableLiveData(PlayerState.STOP)
 
@@ -84,6 +84,7 @@ class PlayerViewModel(private val app: Application): AndroidViewModel(app) {
                     Log.d("ExAudio",it.name+" unlocked")
                 }
             }
+            _currentAudioData.value = dataList?.get(0)
         }
         player.repeatMode
         _currentState.postValue(PlayerState.STOP)
@@ -105,19 +106,19 @@ class PlayerViewModel(private val app: Application): AndroidViewModel(app) {
 
     fun nextAudio() {
         this.player.seekToDefaultPosition(getNextIdx(player.currentMediaItemIndex))
-//        this.onDataChanged()
+        this.onDataChanged()
         this.start()
     }
 
     fun preAudio() {
         this.player.seekToDefaultPosition(getPreIdx(player.currentMediaItemIndex))
-//        this.onDataChanged()
+        this.onDataChanged()
         this.start()
     }
 
-//    private fun onDataChanged(){
-//        _currentAudioData.postValue(dataList?.get(player.currentMediaItemIndex))
-//    }
+    private fun onDataChanged(){
+        _currentAudioData.postValue(dataList?.get(player.currentMediaItemIndex))
+    }
 
     /**
      * 从当前索引得到前一个索引
