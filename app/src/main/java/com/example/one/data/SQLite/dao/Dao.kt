@@ -45,4 +45,7 @@ interface MyAudioDao{
 
     @Query("select * from myaudiodata where id = :id")
     suspend fun findById(id:Long):MyAudioData?
+
+    @Query("select * from myaudiodata where name = :name and author =:author")
+    suspend fun findByNameAndAuthor(name:String,author:String):MyAudioData?
 }

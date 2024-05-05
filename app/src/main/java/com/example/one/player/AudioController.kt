@@ -11,7 +11,7 @@ object AudioController {
     }
 
     fun addItem(extAudioData: ExtAudioData){
-        playerViewModel?.addItem(extAudioData)
+        playerViewModel?.unlockExAudioItem(extAudioData)
     }
 
     fun release(){

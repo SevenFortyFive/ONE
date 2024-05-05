@@ -22,21 +22,31 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
+import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -55,6 +65,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
@@ -72,9 +83,12 @@ fun Player(){
     val vm: PlayerViewModel = viewModel(LocalContext.current as ComponentActivity
         ,factory = MyAudioViewModelFactory(LocalContext.current.applicationContext as Application)
     )
-
+    val dataList by vm.dataList.observeAsState()
     val playerState = vm.currentState.observeAsState()
     val currentData by vm.currentAudioData.observeAsState()
+    val showList = remember {
+        mutableStateOf(false)
+    }
 
     Card(
         modifier = Modifier
@@ -126,8 +140,21 @@ fun Player(){
                                 Icon(imageVector = Icons.Rounded.FavoriteBorder, contentDescription = "Love Audio")
                             }
                         }
-                        IconButton(onClick = { /*TODO*/ }, modifier = Modifier) {
+                        IconButton(onClick = {
+                            showList.value = !showList.value
+                        }, modifier = Modifier) {
                             Icon(imageVector = Icons.Rounded.Menu, contentDescription = "Audio List")
+                        }
+                    }
+                }
+                if(showList.value)
+                {
+                    LazyColumn(modifier = Modifier.height(250.dp)) {
+                        dataList?.let {
+                            items(it.toList())
+                            {
+                                MyListItem(data = it)
+                            }
                         }
                     }
                 }
@@ -159,6 +186,36 @@ fun Player(){
             }
         }
     }
+}
+
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun MyListItem(data:MyAudioData){
+    ListItem(
+//        modifier = Modifier.height(20.dp),
+        headlineContent = { Text(data.name) },
+        supportingContent = { Text(data.author) },
+        trailingContent = { Icon(imageVector = Icons.Rounded.List, contentDescription = "Audio List Item") },
+        leadingContent = {
+            Image(
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current).data(data.surfaceId).apply(block = fun ImageRequest.Builder.() {
+                        transformations(CircleCropTransformation())
+                    }).build()
+                ),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(100.dp)
+//                    .matchParentSize()
+                    .aspectRatio(1.0f)
+                    .padding(20.dp)
+            )
+
+        }
+    )
+    HorizontalDivider()
 }
 
 @SuppressLint("ResourceType")

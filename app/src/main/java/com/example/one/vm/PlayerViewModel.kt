@@ -25,7 +25,11 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(private val app: Application): AndroidViewModel(app) {
     private var player: ExoPlayer = ExoPlayerManager.getExoPlayer()!!
 
-    private var dataList: MutableList<MyAudioData>? = mutableListOf()
+    // 保存列表
+    private var _dataList:MutableLiveData<MutableList<MyAudioData>> = MutableLiveData()
+
+    val dataList: LiveData<MutableList<MyAudioData>>
+        get() = _dataList
 
     private var _currentAudioData: MutableLiveData<MyAudioData> = MutableLiveData()
     val currentAudioData: LiveData<MyAudioData>
@@ -52,6 +56,7 @@ class PlayerViewModel(private val app: Application): AndroidViewModel(app) {
         _currentState.postValue(PlayerState.LOADING)
 
         viewModelScope.launch {
+            val temList : MutableList<MyAudioData> = mutableListOf()
             // 处理初始化的列表
             getAudioList().forEach {
                 // 去数据库中查询
@@ -61,7 +66,7 @@ class PlayerViewModel(private val app: Application): AndroidViewModel(app) {
                 {
                     myAudioRepository.add(it)
                 }
-                dataList?.add(it)
+                temList.add(it)
                 val mediaItem = MediaItem.fromUri(it.uri)
                 player.addMediaItem(mediaItem)
             }
@@ -73,18 +78,20 @@ class PlayerViewModel(private val app: Application): AndroidViewModel(app) {
                     val temData = myAudioRepository.findById(it.id)
                     val newAudioData = MyAudioData(it.id,it.name,"无名",it.surface,
                         null.toString(),Uri.parse(it.uri).toString(),false)
+                    // 检查是否已经存入
                     if(temData == null)
                     {
                         myAudioRepository.add(newAudioData)
                     }
                     val mediaItem = MediaItem.fromUri(newAudioData.uri)
                     player.addMediaItem(mediaItem)
-                    dataList?.add(newAudioData)
+                    temList.add(newAudioData)
                 }else{
                     Log.d("ExAudio",it.name+" unlocked")
                 }
             }
-            _currentAudioData.value = dataList?.get(0)
+            _currentAudioData.value = temList[0]
+            _dataList.value = temList
         }
         player.repeatMode
         _currentState.postValue(PlayerState.STOP)
@@ -117,7 +124,7 @@ class PlayerViewModel(private val app: Application): AndroidViewModel(app) {
     }
 
     private fun onDataChanged(){
-        _currentAudioData.postValue(dataList?.get(player.currentMediaItemIndex))
+        _currentAudioData.postValue(_dataList.value!!.get(player.currentMediaItemIndex))
     }
 
     /**
@@ -125,7 +132,7 @@ class PlayerViewModel(private val app: Application): AndroidViewModel(app) {
      */
     private fun getPreIdx(currentIdx: Int): Int {
         return if (currentIdx == 0)
-            this.dataList?.size!! - 1
+            this._dataList.value?.size!! - 1
         else {
             player.currentMediaItemIndex - 1
         }
@@ -135,7 +142,7 @@ class PlayerViewModel(private val app: Application): AndroidViewModel(app) {
      * 从当前索引得到下一个索引
      */
     private fun getNextIdx(currentIdx: Int): Int {
-        return if (currentIdx == dataList?.size!! - 1) {
+        return if (currentIdx == _dataList.value?.size!! - 1) {
             0
         } else {
             player.currentMediaItemIndex + 1
@@ -145,7 +152,28 @@ class PlayerViewModel(private val app: Application): AndroidViewModel(app) {
     /**
      * 外部调用，添加音乐曲目
      */
-    fun addItem(audioData: ExtAudioData){
-            TODO()
+    fun unlockExAudioItem(audioData: ExtAudioData){
+        viewModelScope.launch {
+            val temData = MyAudioData(audioData.id,audioData.name,"无名",audioData.surface,
+                null.toString(),Uri.parse(audioData.uri).toString(),false
+            )
+
+            if(myAudioRepository.findById(audioData.id) == null)
+            {
+                myAudioRepository.add(temData)
+            }
+            _dataList.value?.add(temData)
+        }
+    }
+
+    fun changeItemLoveState(data:MyAudioData){
+        viewModelScope.launch {
+            val temData = myAudioRepository.findByNameAndAuthor(data.name,data.author)
+            if(temData != null)
+            {
+                temData.love = !temData.love
+                myAudioRepository.modify(temData)
+            }
+        }
     }
 }

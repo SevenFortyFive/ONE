@@ -30,5 +30,5 @@ data class MyAudioData(
     val surfaceId:Int,
     val surfaceUri:String,
     val uri:String,
-    val love:Boolean
+    var love:Boolean
 )

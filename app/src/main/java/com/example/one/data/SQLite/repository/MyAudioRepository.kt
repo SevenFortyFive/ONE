@@ -21,4 +21,7 @@ class MyAudioRepository(private val db: MyAudioDatabase) {
     {
         return db.myAudioDataDao().findById(id)
     }
+    suspend fun findByNameAndAuthor(name:String,author:String): MyAudioData? {
+        return db.myAudioDataDao().findByNameAndAuthor(name, author)
+    }
 }
