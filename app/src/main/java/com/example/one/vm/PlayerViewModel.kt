@@ -1,16 +1,20 @@
 package com.example.one.vm
 
+import android.app.Application
 import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
-import com.example.one.data.PlayerData.AudioData
+import androidx.room.Room
 import com.example.one.data.PlayerData.PlayerState
 import com.example.one.data.PlayerData.getAudioList
+import com.example.one.data.SQLite.db.MyAudioDatabase
+import com.example.one.data.SQLite.entity.MyAudioData
+import com.example.one.data.SQLite.repository.MyAudioRepository
 import com.example.one.data.SharedPreferences.SharedPreferencesHelper
 import com.example.one.data.StoreData.ExtAudioData
 import com.example.one.data.StoreData.getExtAudioList
@@ -18,46 +22,66 @@ import com.example.one.player.ExoPlayerManager
 import kotlinx.coroutines.launch
 
 
-class PlayerViewModel(): ViewModel() {
+class PlayerViewModel(private val app: Application): AndroidViewModel(app) {
     private var player: ExoPlayer = ExoPlayerManager.getExoPlayer()!!
 
-    private var dataList:MutableList<AudioData> = getAudioList().toMutableList()
+    private var dataList: MutableList<MyAudioData>? = mutableListOf()
 
-    private var _currentAudioData: MutableLiveData<AudioData> = MutableLiveData(dataList[0])
-    val currentAudioData: LiveData<AudioData>
-        get() = _currentAudioData
+//    private var _currentAudioData: MutableLiveData<MyAudioData> = MutableLiveData()
+//    val currentAudioData: LiveData<MyAudioData>
+//        get() = _currentAudioData
 
     private var _currentState: MutableLiveData<PlayerState> = MutableLiveData(PlayerState.STOP)
 
     val currentState: LiveData<PlayerState>
         get() = _currentState
 
-    // 上一首歌的名字
-    private var _preName:MutableLiveData<String> = MutableLiveData(dataList[getPreIdx(player.currentMediaItemIndex)].name)
-    val preName: LiveData<String>
-        get() = _preName
-
-    // 下一首歌的名字
-    private var _nextName:MutableLiveData<String> = MutableLiveData(dataList[getNextIdx(player.currentMediaItemIndex)].name)
-    val nextName: LiveData<String>
-        get() = _nextName
+    // 实例化Database对象
+    private val db: MyAudioDatabase by lazy {
+        Room.databaseBuilder(
+            app, MyAudioDatabase::class.java,
+            "MyAudioData.db"
+        ).build()
+    }
+    // 初始化Repository
+    private var myAudioRepository:MyAudioRepository = MyAudioRepository(db)
 
     init {
         Log.d("com.example.one.vm.PlayerViewModel","Init")
 
         _currentState.postValue(PlayerState.LOADING)
+
         viewModelScope.launch {
-            dataList.forEach {
-                val mediaItem = MediaItem.fromUri(Uri.parse(it.uri))
+            // 处理初始化的列表
+            getAudioList().forEach {
+                // 去数据库中查询
+                val temData = myAudioRepository.findById(it.id)
+                // 没有查到存入数据库
+                if(temData == null)
+                {
+                    myAudioRepository.add(it)
+                }
+                dataList?.add(it)
+                val mediaItem = MediaItem.fromUri(it.uri)
                 player.addMediaItem(mediaItem)
             }
 
+            // 处理额外的列表
             getExtAudioList().forEach{
                 if(SharedPreferencesHelper.getIfAudioOk(it.key))
                 {
-                    val mediaItem = MediaItem.fromUri(Uri.parse((it.uri)))
+                    val temData = myAudioRepository.findById(it.id)
+                    val newAudioData = MyAudioData(it.id,it.name,"无名",it.surface,
+                        null.toString(),Uri.parse(it.uri).toString(),false)
+                    if(temData == null)
+                    {
+                        myAudioRepository.add(newAudioData)
+                    }
+                    val mediaItem = MediaItem.fromUri(newAudioData.uri)
                     player.addMediaItem(mediaItem)
-                    dataList.add(AudioData(it.uri,it.name,it.surface))
+                    dataList?.add(newAudioData)
+                }else{
+                    Log.d("ExAudio",it.name+" unlocked")
                 }
             }
         }
@@ -81,28 +105,26 @@ class PlayerViewModel(): ViewModel() {
 
     fun nextAudio() {
         this.player.seekToDefaultPosition(getNextIdx(player.currentMediaItemIndex))
-        this.onDataChanged()
+//        this.onDataChanged()
         this.start()
     }
 
     fun preAudio() {
         this.player.seekToDefaultPosition(getPreIdx(player.currentMediaItemIndex))
-        this.onDataChanged()
+//        this.onDataChanged()
         this.start()
     }
 
-    private fun onDataChanged(){
-        _preName.postValue(dataList[getPreIdx(player.currentMediaItemIndex)].name)
-        _nextName.postValue(dataList[getNextIdx(player.currentMediaItemIndex)].name)
-        _currentAudioData.postValue(dataList[player.currentMediaItemIndex])
-    }
+//    private fun onDataChanged(){
+//        _currentAudioData.postValue(dataList?.get(player.currentMediaItemIndex))
+//    }
 
     /**
      * 从当前索引得到前一个索引
      */
     private fun getPreIdx(currentIdx: Int): Int {
         return if (currentIdx == 0)
-            this.dataList.size - 1
+            this.dataList?.size!! - 1
         else {
             player.currentMediaItemIndex - 1
         }
@@ -112,7 +134,7 @@ class PlayerViewModel(): ViewModel() {
      * 从当前索引得到下一个索引
      */
     private fun getNextIdx(currentIdx: Int): Int {
-        return if (currentIdx == dataList.size - 1) {
+        return if (currentIdx == dataList?.size!! - 1) {
             0
         } else {
             player.currentMediaItemIndex + 1
@@ -123,10 +145,6 @@ class PlayerViewModel(): ViewModel() {
      * 外部调用，添加音乐曲目
      */
     fun addItem(audioData: ExtAudioData){
-        viewModelScope.launch {
-            dataList.add(AudioData(audioData.uri,audioData.name,audioData.surface))
-            val mediaItem = MediaItem.fromUri(Uri.parse((audioData.uri)))
-            player.addMediaItem(mediaItem)
-        }
+            TODO()
     }
 }

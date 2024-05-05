@@ -14,14 +14,7 @@ class MyHotMapDataRepository(private val db: MyHotMapDatabase) {
         return db.myHotMapDataDao().update(myData)
     }
 
-    suspend fun delete(myData: MyHotMapData){
-        return db.myHotMapDataDao().delete(myData)
-    }
-
     suspend fun findByDataWithDay(year: Int,month: Int,day:Int): MyHotMapData?{
         return db.myHotMapDataDao().findByDataWithDay(year, month, day)
-    }
-    suspend fun findById(id:Long): MyHotMapData?{
-        return db.myHotMapDataDao().findById(id)
     }
 }

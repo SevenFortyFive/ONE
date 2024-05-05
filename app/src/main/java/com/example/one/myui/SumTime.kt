@@ -45,7 +45,7 @@ fun SumTime(){
     ) {
         Column(modifier = Modifier.padding(20.dp)
             ) {
-            Text(text = "今日", modifier = Modifier.padding(20.dp))
+            Text(text = "今日", modifier = Modifier.padding(10.dp))
             Spacer(modifier = Modifier.height(2.dp))
             Row(modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -64,7 +64,7 @@ fun SumTime(){
 fun SmallSumTime(type:String,value: Int?) {
     Card(
         modifier =Modifier
-        .width(100.dp)
+        .width(80.dp)
         .animateContentSize()
         .padding(10.dp),
         elevation =  CardDefaults.cardElevation(

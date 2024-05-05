@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.example.one.data.SQLite.entity.MyAudioData
 import com.example.one.data.SQLite.entity.MyHotMapData
 
 @Dao
@@ -26,4 +27,22 @@ interface MyHotMapDao{
 
     @Query("select * from myhotmapdata where id =:id")
     suspend fun findById(id:Long): MyHotMapData?
+}
+
+@Dao
+interface MyAudioDao{
+    @Insert
+    suspend fun add(myAudioData: MyAudioData):Long
+
+    @Delete
+    suspend fun delete(myAudioData: MyAudioData)
+
+    @Update
+    suspend fun update(myAudioData: MyAudioData)
+
+    @Query("select * from myaudiodata")
+    suspend fun getAll():List<MyAudioData>
+
+    @Query("select * from myaudiodata where id = :id")
+    suspend fun findById(id:Long):MyAudioData?
 }

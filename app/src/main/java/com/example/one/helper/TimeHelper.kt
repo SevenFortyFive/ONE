@@ -56,7 +56,7 @@ fun getCurrentMonth():Int{
 }
 
 /**
- * 返回当前月份周一是星期几
+ * 返回当前月份一日是星期几
  */
 fun getCurrentMonthBeginWithWhichInMonth(year: Int = CurrentIntYear,month: Int = CurrentIntMonth): Int {
     return LocalDate.of(year, month,1).dayOfWeek.value

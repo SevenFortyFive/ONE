@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,8 +21,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.one.data.NavData.NavigationMenuScreen
 import com.example.one.page.MainPage
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.DrawerValue
@@ -44,6 +44,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.one.helper.LocalDpHelper
 import com.example.one.myui.ComprehensiveHotMap
 import com.example.one.myui.Player
+import com.example.one.myui.SumTime
 import com.example.one.page.AnalysePage
 import com.example.one.page.OthersPage
 import com.example.one.page.StorePage
@@ -118,6 +119,7 @@ fun MainScreen(navController: NavHostController)
                 HorizontalDivider(modifier = Modifier.padding(5.dp), thickness = 2.dp)
                 Text(text = "每月活力",modifier = Modifier.padding(20.dp))
                 ComprehensiveHotMap(vm = hotMapViewModel)
+                SumTime()
 
             }
         },

@@ -13,3 +13,13 @@ class MyHotMapViewModelFactory(val app: Application): ViewModelProvider.Factory 
         throw IllegalArgumentException("Unknown ViewModel Class")
     }
 }
+
+//用于创建ViewModel的工厂方法
+class MyAudioViewModelFactory(val app: Application): ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if(modelClass.isAssignableFrom(PlayerViewModel::class.java)){
+            return PlayerViewModel(app) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel Class")
+    }
+}

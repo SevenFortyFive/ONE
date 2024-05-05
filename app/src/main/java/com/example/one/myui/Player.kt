@@ -2,6 +2,7 @@ package com.example.one.myui
 
 import com.example.one.vm.PlayerViewModel
 import android.annotation.SuppressLint
+import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
@@ -23,9 +24,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material.icons.rounded.KeyboardArrowLeft
+import androidx.compose.material.icons.rounded.KeyboardArrowRight
+import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,31 +47,33 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.one.R
-import com.example.one.data.PlayerData.AudioData
 import com.example.one.data.PlayerData.PlayerState
-import com.example.one.helper.LocalDpHelper
+import com.example.one.data.SQLite.entity.MyAudioData
 import com.example.one.setting.Setting
+import com.example.one.vm.MyAudioViewModelFactory
 
 @Composable
 fun Player(){
 
-    val vm: PlayerViewModel = viewModel(LocalContext.current as ComponentActivity)
+    val vm: PlayerViewModel = viewModel(LocalContext.current as ComponentActivity
+        ,factory = MyAudioViewModelFactory(LocalContext.current.applicationContext as Application)
+    )
 
     val playerState = vm.currentState.observeAsState()
-    val currentData = vm.currentAudioData.observeAsState()
-    val preName = vm.preName.observeAsState()
-    val nextName = vm.nextName.observeAsState()
+//    val currentData = vm.currentAudioData.observeAsState()
 
     Card(
         modifier = Modifier
@@ -72,7 +84,8 @@ fun Player(){
         ),
         shape = RoundedCornerShape(Setting.WholeElevation)
     ) {
-        Box(modifier = Modifier.fillMaxSize()
+        Box(modifier = Modifier
+            .fillMaxSize()
             .padding(20.dp),
             contentAlignment = Alignment.Center)
         {
@@ -81,22 +94,44 @@ fun Player(){
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CD(isPlaying = (playerState.value == PlayerState.PLAYING),
-                    imgID = (currentData.value as AudioData).surface,
+                    imgID = /*(currentData.value as MyAudioData).surfaceId*/R.raw.img8,
                     modifier = Modifier)
                 Spacer(modifier = Modifier.height(2.dp))
-                Row {
-                    Text(text = "上一首:"+preName.value as String)
-                    Spacer(modifier = Modifier.width(2.dp))
-                    Text(text = (currentData.value as AudioData).name)
-                    Text(text = "下一首:"+nextName.value as String)
+                Row(modifier = Modifier
+                    .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround){
+                    Column {
+                        Text(text = /*currentData.value!!.name*/"", maxLines = 1, fontWeight = FontWeight.Bold)
+                        Text(text = "无名", maxLines = 1)
+                    }
+                    Spacer(modifier = Modifier.width(10.dp))
+
+
+                    var checked by remember {
+                        mutableStateOf(false)
+                    }
+
+                    Row {
+                        IconToggleButton(checked = checked, onCheckedChange = {checked = it}) {
+                            if(checked)
+                            {
+                                Icon(imageVector = Icons.Rounded.Favorite, contentDescription = "Love Audio", tint = Color.Red)
+                            }else{
+                                Icon(imageVector = Icons.Rounded.FavoriteBorder, contentDescription = "Love Audio")
+                            }
+                        }
+                        IconButton(onClick = { /*TODO*/ }, modifier = Modifier) {
+                            Icon(imageVector = Icons.Rounded.Menu, contentDescription = "Audio List")
+                        }
+                    }
                 }
                 Spacer(modifier = Modifier.height(2.dp))
-                Row {
-                    Button(onClick = {vm.preAudio()}) {
-                        Text(text = "上一首")
+                Row (modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly){
+                    IconButton(onClick = { vm.preAudio() }) {
+                        Icon(imageVector = Icons.Rounded.KeyboardArrowLeft, contentDescription = "fore audio")
                     }
-                    Spacer(modifier = Modifier.width(2.dp))
-                    Button(onClick = {
+                    IconButton(onClick = {
                         if(playerState.value == PlayerState.STOP)
                         {
                             vm.start()
@@ -104,11 +139,10 @@ fun Player(){
                             vm.pause()
                         }
                     }) {
-                        Text(text = if(playerState.value == PlayerState.PLAYING)"暂停" else "开始")
+                        Icon(imageVector = Icons.Rounded.PlayArrow, contentDescription = "begin or pause")
                     }
-                    Spacer(modifier = Modifier.width(2.dp))
-                    Button(onClick = {vm.nextAudio()}) {
-                        Text(text = "下一首")
+                    IconButton(onClick = { vm.nextAudio() }) {
+                        Icon(imageVector = Icons.Rounded.KeyboardArrowRight, contentDescription = "next audio")
                     }
                 }
             }

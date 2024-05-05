@@ -14,7 +14,7 @@ import com.example.one.ui.theme.ONETheme
 fun OthersPage()
 {
     Column {
-        SumTime()
+//        SumTime()
         Spacer(modifier = Modifier.height(10.dp))
     }
 }

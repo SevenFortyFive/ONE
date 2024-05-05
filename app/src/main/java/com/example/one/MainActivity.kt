@@ -19,6 +19,7 @@ import com.example.one.player.AudioController
 import com.example.one.timer.AnimatorController
 import com.example.one.ui.theme.ONETheme
 import com.example.one.vm.HotMapViewModel
+import com.example.one.vm.MyAudioViewModelFactory
 import com.example.one.vm.MyHotMapViewModelFactory
 import com.example.one.vm.SPViewModel
 import com.example.one.vm.TimerViewModel
@@ -26,7 +27,7 @@ import com.example.one.vm.TimerViewModel
 class MainActivity : ComponentActivity() {
 
     private val timerViewModel:TimerViewModel by viewModels()
-    private val playerViewModel: PlayerViewModel by viewModels()
+    private val playerViewModel: PlayerViewModel by viewModels{ MyAudioViewModelFactory(this.application) }
     private val hotMapViewModel:HotMapViewModel by viewModels{MyHotMapViewModelFactory(this.application)}
     private val spViewModel:SPViewModel by viewModels()
 

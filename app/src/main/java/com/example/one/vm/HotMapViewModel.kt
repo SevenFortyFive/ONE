@@ -30,7 +30,7 @@ class HotMapViewModel(private val app:Application):AndroidViewModel(app) {
     private val db: MyHotMapDatabase by lazy {
         Room.databaseBuilder(
             app, MyHotMapDatabase::class.java,
-            "myhotmapdata.db"
+            "MyHotMapData.db"
         ).build()
     }
 

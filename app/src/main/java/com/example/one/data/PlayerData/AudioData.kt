@@ -1,20 +1,29 @@
 package com.example.one.data.PlayerData
 
+import android.net.Uri
 import com.example.one.R
-
-data class AudioData(
-    val uri:String,
-    val name: String,
-    val surface: Int
-)
+import com.example.one.data.SQLite.entity.MyAudioData
 
 /**
  * 返回初始化的audio列表
  */
-fun getAudioList(): List<AudioData> {
+fun getAudioList(): List<MyAudioData> {
     return listOf(
-        AudioData("asset:///blackbird.mp3","bird",R.raw.img),
-        AudioData("asset:///citytraffic.mp3","citytraffic",R.raw.img1),
-        AudioData("asset:///rainy.mp3","rainy",R.raw.img3),
-        AudioData("asset:///wind.mp3","wind",R.raw.img8))
+        MyAudioData(0,"Bird","无名",R.raw.img1, null.toString(),
+            Uri.parse("asset:///blackbird.mp3").toString(),
+            false
+        ),
+        MyAudioData(1,"CityTraffic","无名",R.raw.img2, null.toString(),
+            Uri.parse("asset:///citytraffic.mp3").toString(),
+            false
+        ),
+        MyAudioData(2,"Rainy","无名",R.raw.img1, null.toString(),
+            Uri.parse("asset:///rainy.mp3").toString(),
+            false
+        ),
+        MyAudioData(3,"Wind","无名",R.raw.img3, null.toString(),
+            Uri.parse("asset:///wind.mp3").toString(),
+            false
+        )
+    )
 }
